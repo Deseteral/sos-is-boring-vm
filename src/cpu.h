@@ -4,6 +4,5 @@
 
 typedef struct CPU
 {
-  u32 pc;
+	u32 pc;
 } CPU;
-

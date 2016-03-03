@@ -4,10 +4,10 @@
 
 int main()
 {
-  CPU cpu;
-  cpu.pc = 2;
+	CPU cpu;
+	cpu.pc = 2;
 
-  printf("%d\n", cpu.pc);
+	printf("%d\n", cpu.pc);
 
-  return 0;
+	return 0;
 }
