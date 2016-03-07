@@ -1,3 +1,5 @@
 *.elf
 *.swp
+*.gch
+*.out
 build.sh

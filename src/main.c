@@ -5,9 +5,8 @@
 int main(int argc, char *argv[])
 {
 	CPU cpu;
-	cpu.pc = 2;
+	CPU_Initialize(&cpu, 128 * 1024);
 
-	printf("%d\n", cpu.pc);
 
 	return 0;
 }
