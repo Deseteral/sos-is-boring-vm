@@ -15,11 +15,10 @@ Table of contents:
 === Summary ====================================================================
 * 32-bit architecture
 * big endian
-
-Registers:
- * 16 general use registers: R0 .. R15
- * Stack pointer: SP
- * Program counter: PC
+* registers:
+  * 16 general use registers: R0 .. R15
+  * stack pointer: SP
+  * program counter: PC
 
 In this document, anything within [brackets] is shorthand for "the value of the
 RAM at the location of the value inside the brackets". For example, SP register
@@ -47,6 +46,16 @@ value  | opcode   | description
 0x0D   | NOT  a   | negates a, and stores the result in a
 0x0E   | PUSH a   | push a to stack
 0x0F   | POP  a   | pop value from stack and set a to it
+
+--- Values ---------------------------------------------------------------------
+value       | description
+------------+-------------------------------------------------------------------
+0x00 - 0x0F | register (R0 .. R15)
+0x10 - 0x1F | [register]
+0x20        | stack pointer
+0x21        | program counter
+0x22        | [stack pointer]
+0x23        | [program counter]
 
 === Startup ====================================================================
 
