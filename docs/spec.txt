@@ -1,3 +1,17 @@
+   _____ ____  _____    _         __               _
+  / ___// __ \/ ___/   (_)____   / /_  ____  _____(_)___  ____ _
+  \__ \/ / / /\__ \   / / ___/  / __ \/ __ \/ ___/ / __ \/ __ `/
+ ___/ / /_/ /___/ /  / (__  )  / /_/ / /_/ / /  / / / / / /_/ /
+/____/\____//____/  /_/____/  /_.___/\____/_/  /_/_/ /_/\__, /
+  virtual machine                                      /____/
+
+Table of contents:
+
+* Summary
+* Instruction set
+  * Opcode table
+* Startup
+
 === Summary ====================================================================
 * 32-bit architecture
 * big endian
@@ -33,3 +47,7 @@ value  | opcode   | description
 0x0D   | NOT  a   | negates a, and stores the result in a
 0x0E   | PUSH a   | push a to stack
 0x0F   | POP  a   | pop value from stack and set a to it
+
+=== Startup ====================================================================
+
+All registers are set to 0x00000000 when the CPU starts.
