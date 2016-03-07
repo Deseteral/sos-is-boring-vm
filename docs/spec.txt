@@ -1,10 +1,18 @@
-* 32-bit
+=== Summary ====================================================================
+* 32-bit architecture
 * big endian
 
 Registers:
- * R0 .. R15
- * SP
- * PC
+ * 16 general use registers: R0 .. R15
+ * Stack pointer: SP
+ * Program counter: PC
+
+In this document, anything within [brackets] is shorthand for "the value of the
+RAM at the location of the value inside the brackets". For example, SP register
+is "stack pointer", but [SP] means the value of the RAM at the location the
+stack pointer is pointing to.
+
+=== Instruction set ============================================================
 
 --- Opcode table ---------------------------------------------------------------
 value  | opcode   | description
