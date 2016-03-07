@@ -2,7 +2,7 @@
 
 #include "cpu.h"
 
-int main()
+int main(int argc, char *argv[])
 {
 	CPU cpu;
 	cpu.pc = 2;
