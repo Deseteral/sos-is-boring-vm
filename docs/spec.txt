@@ -1,0 +1,26 @@
+* 32-bit
+* big endian
+
+Registers:
+ * R0 .. R16
+ * SP
+ * PC
+
+--- Opcode table ---------------------------------------------------------------
+value  | opcode   | description
+-------+----------+-------------------------------------------------------------
+0x00   | HCF      | halt
+0x01   | NOP      |
+0x02   | MOV  a b | sets a to b
+0x03   | ADD  a b | sets a to a + b
+0x04   | SUB  a b | sets a to a - b
+0x05   | MUL  a b | sets a to a * b
+0x06   | DIV  a b | sets a to a / b
+0x07   | MOD  a b | sets a to a % b
+0x08   | SHL  a b | sets a to a << b
+0x09   | SHR  a b | sets a to a >> b
+0x0A   | AND  a b | sets a to a & b
+0x0B   | OR   a b | sets a to a | b
+0x0C   | XOR  a b | sets a to a ^ b
+       | PUSH a   | push a to stack
+       | POP  a   | pop value from stack and set a to it
