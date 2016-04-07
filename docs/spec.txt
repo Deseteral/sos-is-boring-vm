@@ -1,0 +1,62 @@
+   _____ ____  _____    _         __               _
+  / ___// __ \/ ___/   (_)____   / /_  ____  _____(_)___  ____ _
+  \__ \/ / / /\__ \   / / ___/  / __ \/ __ \/ ___/ / __ \/ __ `/
+ ___/ / /_/ /___/ /  / (__  )  / /_/ / /_/ / /  / / / / / /_/ /
+/____/\____//____/  /_/____/  /_.___/\____/_/  /_/_/ /_/\__, /
+  virtual machine                                      /____/
+
+Table of contents:
+
+* Summary
+* Instruction set
+  * Opcode table
+* Startup
+
+=== Summary ====================================================================
+* 32-bit architecture
+* big endian
+* registers:
+  * 16 general use registers: R0 .. R15
+  * stack pointer: SP
+  * program counter: PC
+
+In this document, anything within [brackets] is shorthand for "the value of the
+RAM at the location of the value inside the brackets". For example, SP register
+is "stack pointer", but [SP] means the value of the RAM at the location the
+stack pointer is pointing to.
+
+=== Instruction set ============================================================
+
+--- Opcode table ---------------------------------------------------------------
+value  | opcode   | description
+-------+----------+-------------------------------------------------------------
+0x00   | NOP      | no operation
+0x01   | HCF      | halt
+0x02   | MOV  a b | sets a to b
+0x03   | ADD  a b | sets a to a + b
+0x04   | SUB  a b | sets a to a - b
+0x05   | MUL  a b | sets a to a * b
+0x06   | DIV  a b | sets a to a / b
+0x07   | MOD  a b | sets a to a % b
+0x08   | SHL  a b | sets a to a << b
+0x09   | SHR  a b | sets a to a >> b
+0x0A   | AND  a b | sets a to a & b
+0x0B   | OR   a b | sets a to a | b
+0x0C   | XOR  a b | sets a to a ^ b
+0x0D   | NOT  a   | negates a, and stores the result in a
+0x0E   | PUSH a   | push a to stack
+0x0F   | POP  a   | pop value from stack and set a to it
+
+--- Values ---------------------------------------------------------------------
+value       | description
+------------+-------------------------------------------------------------------
+0x00 - 0x0F | register (R0 .. R15)
+0x10 - 0x1F | [register]
+0x20        | stack pointer
+0x21        | program counter
+0x22        | [stack pointer]
+0x23        | [program counter]
+
+=== Startup ====================================================================
+
+All registers are set to 0x00000000 when the CPU starts.
