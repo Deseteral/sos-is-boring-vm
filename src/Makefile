@@ -11,7 +11,7 @@ vm: ${OBJS}
 main.o: main.cpp cpu.h types.h
 	${CXX} -c -o main.o ${CXXFLAGS} main.cpp
 
-cpu.o: cpu.cpp cpu.h types.h
+cpu.o: cpu.cpp cpu.h types.h opcodes.h
 	${CXX} -c -o cpu.o ${CXXFLAGS} cpu.cpp
 
 clean:
