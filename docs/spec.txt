@@ -8,6 +8,7 @@
 Table of contents:
 
 * Summary
+* Instruction length
 * Instruction set
   * Opcode table
 * Startup
@@ -25,29 +26,43 @@ RAM at the location of the value inside the brackets". For example, SP register
 is "stack pointer", but [SP] means the value of the RAM at the location the
 stack pointer is pointing to.
 
+=== Instuction length ==========================================================
+
+Insturctions are always 32 bits long.
+
+ Opcode: 8 bits
+Value A: 8 bits
+Value B: 8 bits
+Value C: 8 bits
+----------------
+  Total: 32 bits
+
+OOAABBCC
+
 === Instruction set ============================================================
 
 --- Opcode table ---------------------------------------------------------------
-value  | opcode   | description
--------+----------+-------------------------------------------------------------
-0x00   | NOP      | no operation
-0x01   | HCF      | halt
-0x02   | MOV  a b | sets a to b
-0x03   | ADD  a b | sets a to a + b
-0x04   | SUB  a b | sets a to a - b
-0x05   | MUL  a b | sets a to a * b
-0x06   | DIV  a b | sets a to a / b
-0x07   | MOD  a b | sets a to a % b
-0x08   | SHL  a b | sets a to a << b
-0x09   | SHR  a b | sets a to a >> b
-0x0A   | AND  a b | sets a to a & b
-0x0B   | OR   a b | sets a to a | b
-0x0C   | XOR  a b | sets a to a ^ b
-0x0D   | NOT  a   | negates a, and stores the result in a
-0x0E   | PUSH a   | push a to stack
-0x0F   | POP  a   | pop value from stack and set a to it
+value  | opcode     | description
+-------+------------+-----------------------------------------------------------
+0x00   | NOP        | no operation
+0x01   | HCF        | halt
+0x02   | MOV  a b   | sets a to value of b when b is number,
+       |            |   sets a to b otherwise
+0x03   | ADD  a b   | sets a to a + b
+0x04   | SUB  a b   | sets a to a - b
+0x05   | MUL  a b   | sets a to a * b
+0x06   | DIV  a b   | sets a to a / b
+0x07   | MOD  a b   | sets a to a % b
+0x08   | SHL  a b   | sets a to a << b
+0x09   | SHR  a b   | sets a to a >> b
+0x0A   | AND  a b   | sets a to a & b
+0x0B   | OR   a b   | sets a to a | b
+0x0C   | XOR  a b   | sets a to a ^ b
+0x0D   | NOT  a     | negates a, and stores the result in a
+0x0E   | PUSH a     | push a to stack
+0x0F   | POP  a     | pop value from stack and set a to it
 
---- Values ---------------------------------------------------------------------
+--- Values table ---------------------------------------------------------------
 value       | description
 ------------+-------------------------------------------------------------------
 0x00 - 0x0F | register (R0 .. R15)
