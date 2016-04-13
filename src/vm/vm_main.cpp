@@ -1,6 +1,6 @@
 #include <cstdio>
 
-#include "cpu.h"
+#include "cpu.hpp"
 
 int main(int argc, char *argv[])
 {

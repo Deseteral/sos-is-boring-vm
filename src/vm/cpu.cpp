@@ -1,8 +1,8 @@
-#include "cpu.h"
+#include "cpu.hpp"
 
 #include <cstdlib>
 
-void 
+void
 CPU::Initialize(u32 mem_size)
 {
 	this->pc = 0;
