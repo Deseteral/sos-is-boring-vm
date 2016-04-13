@@ -1,7 +1,7 @@
-CXX=g++
-CXXFLAGS=-g -Wall -Wpedantic
+CXX= g++
+CXXFLAGS= -g -Wall -pedantic
 LFLAGS=
-OBJS=main.o cpu.o
+OBJS= main.o cpu.o
 
 all: vm
 
