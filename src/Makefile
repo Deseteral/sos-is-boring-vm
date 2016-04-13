@@ -6,7 +6,7 @@ OBJS= main.o cpu.o
 all: vm
 
 vm: ${OBJS}
-	${CXX} -o vm ${CXXFLAGS} ${OBJS} ${LFLAGS}
+	${CXX} -o vm.elf ${CXXFLAGS} ${OBJS} ${LFLAGS}
 
 main.o: main.cpp cpu.h types.h
 	${CXX} -c -o main.o ${CXXFLAGS} main.cpp
@@ -18,4 +18,4 @@ clean:
 	rm -f ${OBJS}
 
 cleanall: clean
-	rm -f vm
+	rm -f vm.elf
