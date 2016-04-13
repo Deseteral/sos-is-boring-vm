@@ -1,6 +1,6 @@
 #pragma once
 
-#include "types.h"
+#include "../types.h"
 
 struct CPU
 {
@@ -8,5 +8,5 @@ struct CPU
 	u8* memory;
 
 	void Initialize(u32 mem_size);
-  void Tick();
+	void Tick();
 };
