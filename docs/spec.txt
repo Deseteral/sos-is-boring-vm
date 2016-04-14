@@ -26,9 +26,9 @@ RAM at the location of the value inside the brackets". For example, SP register
 is "stack pointer", but [SP] means the value of the RAM at the location the
 stack pointer is pointing to.
 
-=== Instuction length ==========================================================
+=== Instruction length =========================================================
 
-Insturctions are always 32 bits long.
+Instructions are always 32 bits long.
 
  Opcode: 8 bits
 Value A: 8 bits
