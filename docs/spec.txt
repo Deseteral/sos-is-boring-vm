@@ -61,6 +61,16 @@ value  | opcode     | description
 0x0D   | NOT  a     | negates a, and stores the result in a
 0x0E   | PUSH a     | push a to stack
 0x0F   | POP  a     | pop value from stack and set a to it
+0x10   | CMP  a b   |
+0x11   | JMP  a     | sets PC the memory address of label a
+0x12   | JMR  a     | adds value of a to PC
+0x13   | JZ   addr  |
+0x14   | JNZ  addr  |
+0x15   | JG   addr  |
+0x16   | JNG  addr  |
+0x17   | JL   addr  |
+0x18   | JNL  addr  |
+0x19   | LOOP addr  |
 
 --- Values table ---------------------------------------------------------------
 value       | description
