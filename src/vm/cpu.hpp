@@ -2,11 +2,18 @@
 
 #include "../types.hpp"
 
+enum ProgramState
+{
+	HALTED, OK,
+	ERR_ADDRESS_BOUNDARY, ERR_INVALID_OPCODE, ERR_ZERO_DIVISION,
+	ERR_STACK_EMPTY, ERR_STACK_OVERFLOW
+};
+
 struct CPU
 {
 	u32 pc;
-	u8* memory;
+	u32 *memory;
 
-	void Initialize(u32 mem_size);
-	void Tick();
+	bool Initialize(u32 mem_size);
+	ProgramState Tick();
 };
