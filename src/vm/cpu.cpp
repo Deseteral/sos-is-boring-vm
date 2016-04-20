@@ -17,7 +17,7 @@ CPU::Load(FILE *input)
 	while ((byte = getc(input)) != EOF && byte_num < this->mem_size * sizeof(u32))
 		this->memory[byte_num++] = byte;
 	this->pc = 0;
-	return byte == EOF && byte_num <= this->mem_size * sizeof(u32);
+	return byte == EOF;
 }
 
 ProgramState
