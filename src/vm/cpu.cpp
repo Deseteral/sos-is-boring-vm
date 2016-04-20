@@ -1,13 +1,23 @@
-#include "cpu.hpp"
-
 #include <cstdlib>
+#include "cpu.hpp"
 
 bool
 CPU::Initialize(u32 mem_size)
 {
-	this->pc = 0;
+	this->mem_size = mem_size;
 	this->memory = (u32 *)calloc(mem_size, sizeof(u32));
-	return this->memory ? true : false;
+	return (bool)this->memory;
+}
+
+bool
+CPU::Load(FILE *input)
+{
+	int byte;
+	u32 byte_num = 0;
+	while ((byte = getc(input)) != EOF && byte_num < this->mem_size * sizeof(u32))
+		this->memory[byte_num++] = byte;
+	this->pc = 0;
+	return byte == EOF && byte_num <= this->mem_size * sizeof(u32);
 }
 
 ProgramState

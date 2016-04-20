@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 		{"version", 0, NULL, 'v'},
 		{NULL, 0, NULL, 0}
 	};
-	u32 mem_size = 16 * 1024 * sizeof(int);
+	u32 mem_size = 16 * 1024;
 	char *input_file = NULL;
 	for (int option, long_option_index; (option = getopt_long(argc, argv, "hs:uv", LongOptions, &long_option_index)) != -1;)
 		switch (option)
@@ -32,7 +32,6 @@ int main(int argc, char *argv[])
 					fprintf(stderr, "Invalid memory size parameter \"%s\".\n", optarg);
 					return EINVAL;
 				}
-				mem_size *= sizeof(int);
 				break;
 			case 'u':
 				puts("Syntax: vm [-s SIZE|--size SIZE] [INPUT_FILE]\n"
@@ -64,7 +63,10 @@ int main(int argc, char *argv[])
 		fputs("Cannot allocate memory.\n", stderr);
 		return ENOMEM;
 	}
-	// TODO: copy program to the memory
+	if (!cpu.Load(input)) {
+		fputs("Memory size is to small to store the program.\n", stderr);
+		return 1;
+	}
 	if (input_file)
 		fclose(input);
 	ProgramState state;

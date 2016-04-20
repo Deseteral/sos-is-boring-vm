@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cstdio>
 #include "../types.hpp"
 
 enum ProgramState
@@ -12,8 +13,10 @@ enum ProgramState
 struct CPU
 {
 	u32 pc;
+	u32 mem_size;
 	u32 *memory;
 
-	bool Initialize(u32 mem_size);
+	bool Initialize(u32);
+	bool Load(FILE *);
 	ProgramState Tick();
 };
