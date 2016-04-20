@@ -64,7 +64,7 @@ int main(int argc, char *argv[])
 		return ENOMEM;
 	}
 	if (!cpu.Load(input)) {
-		fputs("Memory size is to small to store the program.\n", stderr);
+		fputs("Memory size is too small to store the program.\n", stderr);
 		return 1;
 	}
 	if (input_file)
