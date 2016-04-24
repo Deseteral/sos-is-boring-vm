@@ -69,28 +69,31 @@ int main(int argc, char *argv[])
 	}
 	if (input_file)
 		fclose(input);
-	ProgramState state;
-	while ((state = cpu.Tick()) == OK)
+	CPU::ProgramState state;
+	while ((state = cpu.Tick()) == CPU::OK)
 		continue;
 	switch (state)
 	{
-		case HALTED:
+		case CPU::HALTED:
 			fputs("Program exited normally.\n", stderr);
 			break;
-		case ERR_ADDRESS_BOUNDARY:
+		case CPU::ERR_ADDRESS_BOUNDARY:
 			fputs("Address boundary error.\n", stderr);
 			return 1;
-		case ERR_INVALID_OPCODE:
+		case CPU::ERR_INVALID_OPCODE:
 			fputs("Invalid operation error.\n", stderr);
 			return 1;
-		case ERR_ZERO_DIVISION:
+		case CPU::ERR_ZERO_DIVISION:
 			fputs("Zero division error.\n", stderr);
 			return 1;
-		case ERR_STACK_EMPTY:
+		case CPU::ERR_STACK_EMPTY:
 			fputs("POP operation on empty stack.\n", stderr);
 			return 1;
-		case ERR_STACK_OVERFLOW:
+		case CPU::ERR_STACK_OVERFLOW:
 			fputs("PUSH operation on full stack.\n", stderr);
+			return 1;
+		default:
+			fputs("Unknown error occurred.\n", stderr);
 			return 1;
 	}
 	return 0;

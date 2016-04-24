@@ -1,11 +1,29 @@
 #include <cstdlib>
+
 #include "cpu.hpp"
+#include "../opcodes.hpp"
+
+CPU::CPU()
+{
+	this->pc = 0;
+	this->mem_size = 0;
+	this->memory = NULL;
+	this->flags.zero = false;
+	this->flags.greater = false;
+	this->flags.lower = false;
+	this->flags.carry = false;
+}
+
+CPU::~CPU()
+{
+	free(this->memory);
+}
 
 bool
 CPU::Initialize(u32 mem_size)
 {
-	this->mem_size = mem_size;
-	this->memory = (u32 *)calloc(mem_size, sizeof(u32));
+	if ((this->memory = (u32 *)calloc(mem_size, sizeof(u32))))
+		this->mem_size = mem_size;
 	return (bool)this->memory;
 }
 
@@ -16,19 +34,20 @@ CPU::Load(FILE *input)
 	u32 byte_num = 0;
 	while ((byte = getc(input)) != EOF && byte_num < this->mem_size * sizeof(u32))
 		this->memory[byte_num++] = byte;
-	this->pc = 0;
 	return byte == EOF;
 }
 
-ProgramState
+CPU::ProgramState
 CPU::Tick()
 {
-	u32 opcode = this->memory[this->pc++];
-
-	// TODO: Implement instruction set based on documentation
-	// switch (opcode) {
-	// 	case 0x0:
-	// 	break;
-	// }
+	u32 instruction = this->memory[this->pc++];
+	switch (instruction & (0xff << 3))
+	{
+		case OP_NOP:
+			break;
+		// TODO: add remaining opcodes
+		default:
+			return ERR_INVALID_OPCODE;
+	}
 	return HALTED;
 }
