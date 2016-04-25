@@ -39,7 +39,8 @@ int main(int argc, char *argv[])
 				return 0;
 			case 'v':
 				puts("vm compiled on " __DATE__ " at " __TIME__ "\n"
-				"Copyright (C) 2016 Deseteral <deseteral@gmail.com>");
+				"Copyright (C) 2016 Deseteral <deseteral@gmail.com>\n"
+				"Copyright (C) 2016 Subc2 <subc2@wp.pl>");
 				return 0;
 			default:
 				return EINVAL;
