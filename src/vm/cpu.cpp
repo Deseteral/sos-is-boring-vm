@@ -31,10 +31,10 @@ CPU::Initialize(u32 mem_size)
 bool
 CPU::Load(FILE *input)
 {
-	int byte;
-	u32 byte_num = 0;
-	while ((byte = getc(input)) != EOF && byte_num < this->mem_size * sizeof(u32))
-		this->memory[byte_num++] = byte;
+	int byte = '\0';
+	for (u32 word_index = 0; byte != EOF && word_index < this->mem_size; ++word_index)
+		for (int shift = 8 * (sizeof(u32) - 1); shift >= 0 && (byte = getc(input)) != EOF; shift -= 8)
+			memory[word_index] |= byte << shift;
 	return byte == EOF;
 }
 
@@ -48,6 +48,7 @@ CPU::Tick()
 	switch (instruction & (0xff << 24))
 	{
 		case OP_NOP:
+			printf("NOP!: %u, %#.8X\n", pc, instruction);
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
@@ -69,6 +70,8 @@ CPU::Tick()
 void
 CPU::set_errored_line()
 {
+	if (!this->extension.debug_info)
+		return;
 	for (
 		u32 *key = this->extension.debug_info;
 		key < this->memory + this->mem_size;
