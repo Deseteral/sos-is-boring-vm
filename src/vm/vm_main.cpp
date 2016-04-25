@@ -4,6 +4,14 @@
 
 #include "cpu.hpp"
 
+void print_debug_info(CPU *cpu)
+{
+	if (cpu->extension.errored_line)
+		fprintf(stderr, "line %s\n", cpu->extension.errored_line);
+	fprintf(stderr, "errored instruction: 0x%.8X\n", cpu->memory[cpu->pc - 1]);
+	return;
+}
+
 int main(int argc, char *argv[])
 {
 	const char *const Help = "SOS is boring VM - simple virtual machine\n"
@@ -80,21 +88,37 @@ int main(int argc, char *argv[])
 			break;
 		case CPU::ERR_ADDRESS_BOUNDARY:
 			fputs("Address boundary error.\n", stderr);
+			print_debug_info(&cpu);
+			return 1;
+		case CPU::ERR_PC_BOUNDARY:
+			fputs("PC boundary error.\n", stderr);
 			return 1;
 		case CPU::ERR_INVALID_OPCODE:
 			fputs("Invalid operation error.\n", stderr);
+			print_debug_info(&cpu);
 			return 1;
 		case CPU::ERR_ZERO_DIVISION:
 			fputs("Zero division error.\n", stderr);
+			print_debug_info(&cpu);
 			return 1;
 		case CPU::ERR_STACK_EMPTY:
 			fputs("POP operation on empty stack.\n", stderr);
+			print_debug_info(&cpu);
 			return 1;
 		case CPU::ERR_STACK_OVERFLOW:
 			fputs("PUSH operation on full stack.\n", stderr);
+			print_debug_info(&cpu);
+			return 1;
+		case CPU::_ERR_SIZE:
+			fprintf(
+				stderr,
+				"Program explicitly said it needs memory of size %d to run.\n",
+				cpu.extension.required_memory
+			);
 			return 1;
 		default:
 			fputs("Unknown error occurred.\n", stderr);
+			print_debug_info(&cpu);
 			return 1;
 	}
 	return 0;

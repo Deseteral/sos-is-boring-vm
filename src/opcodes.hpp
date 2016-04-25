@@ -32,3 +32,7 @@
 #define OP_JC   0x1D
 #define OP_JNC  0x1E
 #define OP_LOOP 0x1F
+
+// extensions
+#define _OP_SIZE  0xF0
+#define _OP_DEBUG 0xF1

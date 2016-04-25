@@ -8,8 +8,10 @@ struct CPU
 	enum ProgramState
 	{
 		HALTED, OK,
-		ERR_ADDRESS_BOUNDARY, ERR_INVALID_OPCODE, ERR_ZERO_DIVISION,
-		ERR_STACK_EMPTY, ERR_STACK_OVERFLOW
+		ERR_ADDRESS_BOUNDARY, ERR_PC_BOUNDARY,
+		ERR_INVALID_OPCODE, ERR_ZERO_DIVISION,
+		ERR_STACK_EMPTY, ERR_STACK_OVERFLOW,
+		_ERR_SIZE
 	};
 
 	u32 pc;
@@ -21,10 +23,17 @@ struct CPU
 		bool lower;
 		bool carry;
 	} flags;
+	union {
+		u32 *debug_info;
+		char *errored_line;
+		int required_memory;
+	} extension;
 
 	CPU();
 	~CPU();
 	bool Initialize(u32);
 	bool Load(FILE *);
 	ProgramState Tick();
+
+	void set_errored_line();
 };
