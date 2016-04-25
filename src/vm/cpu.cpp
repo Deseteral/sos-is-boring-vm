@@ -5,7 +5,7 @@
 
 CPU::CPU() :
 	pc(0), mem_size(0), memory(NULL),
-	flags({false,false,false,false}), extension({NULL})
+	flags({false, false, false, false}), extension({NULL})
 {}
 
 CPU::~CPU()
@@ -25,8 +25,16 @@ bool
 CPU::Load(FILE *input)
 {
 	int byte = '\0';
-	for (u32 word_index = 0; byte != EOF && word_index < this->mem_size; ++word_index)
-		for (int shift = 8 * (sizeof(u32) - 1); shift >= 0 && (byte = getc(input)) != EOF; shift -= 8)
+	for (
+		u32 word_index = 0;
+		byte != EOF && word_index < this->mem_size;
+		++word_index
+	)
+		for (
+			int shift = 8 * (sizeof(u32) - 1);
+			shift >= 0 && (byte = getc(input)) != EOF;
+			shift -= 8
+		)
 			memory[word_index] |= byte << shift;
 	return byte == EOF;
 }
@@ -50,7 +58,7 @@ CPU::Tick()
 			}
 			break;
 		case _OP_DEBUG:
-			this->extension.debug_info =  this->memory + data;
+			this->extension.debug_info = this->memory + data;
 			break;
 		default:
 			this->set_errored_line();
