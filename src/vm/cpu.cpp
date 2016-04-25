@@ -3,17 +3,10 @@
 #include "cpu.hpp"
 #include "../opcodes.hpp"
 
-CPU::CPU()
-{
-	this->pc = 0;
-	this->mem_size = 0;
-	this->memory = NULL;
-	this->flags.zero = false;
-	this->flags.greater = false;
-	this->flags.lower = false;
-	this->flags.carry = false;
-	this->extension.debug_info = NULL;
-}
+CPU::CPU() :
+	pc(0), mem_size(0), memory(NULL),
+	flags({false,false,false,false}), extension({NULL})
+{}
 
 CPU::~CPU()
 {
@@ -48,7 +41,6 @@ CPU::Tick()
 	switch (instruction & (0xff << 24))
 	{
 		case OP_NOP:
-			printf("NOP!: %u, %#.8X\n", pc, instruction);
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
