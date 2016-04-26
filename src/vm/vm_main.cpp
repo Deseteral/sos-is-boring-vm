@@ -94,8 +94,12 @@ int main(int argc, char *argv[])
 		case CPU::ERR_PC_BOUNDARY:
 			fputs("PC boundary error.\n", stderr);
 			return 1;
+		case CPU::ERR_INVALID_ARG:
+			fputs("Invalid operation argument error.\n", stderr);
+			print_debug_info(&cpu);
+			return 1;
 		case CPU::ERR_INVALID_OPCODE:
-			fputs("Invalid operation error.\n", stderr);
+			fputs("Invalid operation code error.\n", stderr);
 			print_debug_info(&cpu);
 			return 1;
 		case CPU::ERR_ZERO_DIVISION:
