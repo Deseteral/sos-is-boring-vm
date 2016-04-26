@@ -3,6 +3,16 @@
 #include "cpu.hpp"
 #include "../opcodes.hpp"
 
+static inline u32 opcode(u32 instruction)
+{
+	return instruction >> 24;
+}
+
+static inline u32 data(u32 instruction)
+{
+	return instruction & 0xffffff;
+}
+
 CPU::CPU() :
 	pc(0), lc(0), sp(0), mem_size(0), memory(NULL),
 	registers({0}), stack({0}), flags({false, false, false, false}),
@@ -48,30 +58,29 @@ CPU::Tick()
 	if (pc >= mem_size)
 		return ERR_PC_BOUNDARY;
 	u32 instruction = this->Instruction(this->pc++);
-	u32 data = instruction & ~(0xff << 24);
-	switch (instruction >> 24)
+	switch (opcode(instruction))
 	{
 		case OP_NOP:
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
-			if (this->mem_size < data) {
-				this->extension.required_memory = data;
+			if (this->mem_size < data(instruction)) {
+				this->extension.required_memory = data(instruction);
 				return _ERR_SIZE;
 			}
 			break;
 		case _OP_DEBUG:
-			this->extension.debug_info = data;
+			this->extension.debug_info = data(instruction);
 			break;
 		default:
-			this->set_errored_line();
+			this->_SetErroredLine();
 			return ERR_INVALID_OPCODE;
 	}
 	return OK;
 }
 
 void
-CPU::set_errored_line()
+CPU::_SetErroredLine()
 {
 	if (!this->extension.debug_info)
 		return;

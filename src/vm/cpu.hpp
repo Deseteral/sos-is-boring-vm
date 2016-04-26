@@ -46,5 +46,5 @@ struct CPU
 	bool Load(FILE *);
 	ProgramState Tick();
 
-	void set_errored_line();
+	void _SetErroredLine();
 };
