@@ -85,19 +85,20 @@ flag    | description
 ZERO    | set by CMP if a = b
 LOWER   | set by CMP if a < b
 GREATER | set by CMP if a > b
-CARRY   | set by ADD, SUB, MUL, SHL and SHR if 32-bits limit is exceeded
+CARRY   | set by ADD, SUB, MUL, SAL, SAR, INC, DEC, SHL and SHR
+        |   if 32-bits limit is exceeded
 
 --- Values table ---------------------------------------------------------------
 value       | description
 ------------+-------------------------------------------------------------------
 0x00 - 0x0F | register (R0 .. R15)
-0x10 - 0x1F | [register]
-0x20        | loop counter
-0x21        | stack pointer
-0x22        | program counter
-0x23        | [loop counter]
-0x24        | [stack pointer]
-0x25        | [program counter]
+0x80 - 0x8F | [register]
+0x10        | loop counter
+0x11        | stack pointer
+0x12        | program counter
+0x90        | [loop counter]
+0x91        | [stack pointer]
+0x92        | [program counter]
 
 === Startup ====================================================================
 
