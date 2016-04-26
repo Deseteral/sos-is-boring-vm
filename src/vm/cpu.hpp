@@ -13,10 +13,16 @@ struct CPU
 		ERR_STACK_EMPTY, ERR_STACK_OVERFLOW,
 		_ERR_SIZE
 	};
+	struct DebugSymbol {
+		u32 value;
+
+		u16 word() { return this->value >> 16;    }
+		u16 next() { return this->value & 0xffff; }
+	};
 
 	u32 pc;
 	u32 mem_size;
-	u32 *memory;
+	u8 *memory;
 	struct {
 		bool zero;
 		bool greater;
@@ -24,13 +30,14 @@ struct CPU
 		bool carry;
 	} flags;
 	union {
-		u32 *debug_info;
+		u32 debug_info;
 		char *errored_line;
 		int required_memory;
 	} extension;
 
 	CPU();
 	~CPU();
+	u32 Instruction(u32);
 	bool Initialize(u32);
 	bool Load(FILE *);
 	ProgramState Tick();

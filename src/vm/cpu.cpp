@@ -5,7 +5,7 @@
 
 CPU::CPU() :
 	pc(0), mem_size(0), memory(NULL),
-	flags({false, false, false, false}), extension({NULL})
+	flags({false, false, false, false}), extension({0})
 {}
 
 CPU::~CPU()
@@ -13,10 +13,20 @@ CPU::~CPU()
 	free(this->memory);
 }
 
+u32
+CPU::Instruction(u32 counter)
+{
+	return
+		(this->memory[counter * sizeof(u32) + 0] << 24) |
+		(this->memory[counter * sizeof(u32) + 1] << 16) |
+		(this->memory[counter * sizeof(u32) + 2] << 8) 	|
+		(this->memory[counter * sizeof(u32) + 3] << 0);
+}
+
 bool
 CPU::Initialize(u32 mem_size)
 {
-	if ((this->memory = (u32 *)calloc(mem_size, sizeof(u32))))
+	if ((this->memory = (u8 *)malloc(mem_size * sizeof(u32))))
 		this->mem_size = mem_size;
 	return (bool)this->memory;
 }
@@ -24,18 +34,10 @@ CPU::Initialize(u32 mem_size)
 bool
 CPU::Load(FILE *input)
 {
-	int byte = '\0';
-	for (
-		u32 word_index = 0;
-		byte != EOF && word_index < this->mem_size;
-		++word_index
-	)
-		for (
-			int shift = 8 * (sizeof(u32) - 1);
-			shift >= 0 && (byte = getc(input)) != EOF;
-			shift -= 8
-		)
-			memory[word_index] |= byte << shift;
+	int byte;
+	u32 byte_num = 0;
+	while ((byte = getc(input)) != EOF && byte_num < this->mem_size * sizeof(u32))
+		this->memory[byte_num++] = byte;
 	return byte == EOF;
 }
 
@@ -44,7 +46,7 @@ CPU::Tick()
 {
 	if (pc >= mem_size)
 		return ERR_PC_BOUNDARY;
-	u32 instruction = this->memory[this->pc++];
+	u32 instruction = this->Instruction(this->pc++);
 	u32 data = instruction & ~(0xff << 24);
 	switch (instruction & (0xff << 24))
 	{
@@ -58,7 +60,7 @@ CPU::Tick()
 			}
 			break;
 		case _OP_DEBUG:
-			this->extension.debug_info = this->memory + data;
+			this->extension.debug_info = data;
 			break;
 		default:
 			this->set_errored_line();
@@ -72,19 +74,23 @@ CPU::set_errored_line()
 {
 	if (!this->extension.debug_info)
 		return;
+	DebugSymbol key;
 	for (
-		u32 *key = this->extension.debug_info;
-		key < this->memory + this->mem_size;
-		key += *key & 0xffff
-	)
-		if (this->pc == (*key >> 16))
+		u32 word_index = this->extension.debug_info;
+		word_index < this->mem_size;
+		word_index += key.next()
+	) {
+		key.value = this->Instruction(word_index);
+		if (this->pc == word_index)
 		{
-			this->extension.errored_line = (char *)(key + 1);
+			this->extension.errored_line =
+				(char *)(this->memory + word_index * sizeof(u32));
 			return;
 		}
-		else if (pc < (*key >> 16))  // instruction not present in source file
+		else if (pc < key.word())  // instruction not present in source file
 			break;
-		else if (!(*key & 0xffff))  // no more lines follows
+		else if (!key.next())  // no more lines follows
 			break;
+	}
 	this->extension.errored_line = NULL;
 }
