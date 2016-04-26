@@ -4,8 +4,9 @@
 #include "../opcodes.hpp"
 
 CPU::CPU() :
-	pc(0), mem_size(0), memory(NULL),
-	flags({false, false, false, false}), extension({0})
+	pc(0), lc(0), sp(0), mem_size(0), memory(NULL),
+	registers({0}), stack({0}), flags({false, false, false, false}),
+	extension({0})
 {}
 
 CPU::~CPU()
