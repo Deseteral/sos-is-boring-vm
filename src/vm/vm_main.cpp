@@ -23,6 +23,7 @@ int main(int argc, char *argv[])
 	"  -v, --version         display program version";
 	const struct option LongOptions[] = {
 		{"help", 0, NULL, 'h'},
+		{"size", 1, NULL, 's'},
 		{"usage", 0, NULL, 'u'},
 		{"version", 0, NULL, 'v'},
 		{NULL, 0, NULL, 0}
