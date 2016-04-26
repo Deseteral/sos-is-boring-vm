@@ -49,7 +49,7 @@ CPU::Tick()
 		return ERR_PC_BOUNDARY;
 	u32 instruction = this->Instruction(this->pc++);
 	u32 data = instruction & ~(0xff << 24);
-	switch (instruction & (0xff << 24))
+	switch (instruction >> 24)
 	{
 		case OP_NOP:
 			break;
