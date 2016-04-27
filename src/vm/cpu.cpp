@@ -99,7 +99,7 @@ CPU::ProgramState
 CPU::Tick()
 {
 	VALIDATE_PC()
-	u8 *ptr1;
+	u8 *ptr1, *ptr2;
 	u64 result;
 	u32 instruction = this->CurrentInstruction();
 	bytes_add(this->pc, 1);
@@ -114,8 +114,11 @@ CPU::Tick()
 			{
 				VALIDATE_ARG(byte(instruction, 1))
 				VALIDATE_PC()
+				ptr1 = this->WhichRegister(byte(instruction, 1));
+				if (!ptr1)
+					return ERR_ADDRESS_BOUNDARY;
 				memcpy(
-					this->WhichRegister(byte(instruction, 1)),
+					ptr1,
 					this->memory + bytes2word(this->pc) * sizeof(u32),
 					sizeof(u32)
 				);
@@ -124,18 +127,20 @@ CPU::Tick()
 			else
 			{
 				VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
-				word2bytes(
-					bytes2word(this->WhichRegister(byte(instruction, 2))),
-					this->WhichRegister(byte(instruction, 1))
-				);
+				ptr1 = this->WhichRegister(byte(instruction, 1));
+				ptr2 = this->WhichRegister(byte(instruction, 2));
+				if (!ptr1 || !ptr2)
+					return ERR_ADDRESS_BOUNDARY;
+				word2bytes(bytes2word(ptr2), ptr1);
 			}
 			break;
 		case OP_ADD:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
 			ptr1 = this->WhichRegister(byte(instruction, 1));
-			result =
-				(u64)bytes2word(ptr1) +
-				bytes2word(this->WhichRegister(byte(instruction, 2)));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = (u64)bytes2word(ptr1) + bytes2word(ptr2);
 			word2bytes(result, ptr1);
 			this->flags.carry = (bool)(result != (u32)result);
 			break;
