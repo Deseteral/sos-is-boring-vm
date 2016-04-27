@@ -100,7 +100,7 @@ CPU::Tick()
 {
 	VALIDATE_PC()
 	u8 *ptr1, *ptr2;
-	u64 result;
+	s64 result;
 	u32 instruction = this->CurrentInstruction();
 	bytes_add(this->pc, 1);
 	switch (opcode(instruction))
@@ -140,9 +140,9 @@ CPU::Tick()
 			ptr2 = this->WhichRegister(byte(instruction, 2));
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
-			result = (u64)bytes2word(ptr1) + bytes2word(ptr2);
+			result = (s64)(s32)bytes2word(ptr1) + (s32)bytes2word(ptr2);
 			word2bytes(result, ptr1);
-			this->flags.carry = (bool)(result != (u32)result);
+			this->flags.carry = (bool)(result != (s32)result);
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
