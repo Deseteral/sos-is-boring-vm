@@ -45,6 +45,7 @@ struct CPU
 	u32 LastInstruction();
 	bool Initialize(u32);
 	bool Load(FILE *);
+	u8 *WhichRegister(u8);
 	ProgramState Tick();
 
 	void _SetErroredLine();

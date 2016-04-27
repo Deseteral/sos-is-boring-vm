@@ -1,8 +1,25 @@
 #include <cstdlib>
+#include <cstring>
 
 #include "cpu.hpp"
 #include "../conversion.hpp"
 #include "../opcodes.hpp"
+
+#define VALIDATE_ARGS(val1, val2)\
+VALIDATE_ARG(val1)\
+VALIDATE_ARG(val2)
+
+#define VALIDATE_ARG(value)\
+{\
+	if (((value) & ~0x80) > 0x12)\
+		return ERR_INVALID_ARG;\
+}
+
+#define VALIDATE_PC()\
+{\
+	if (bytes2word(this->pc) >= mem_size)\
+		return ERR_PC_BOUNDARY;\
+}
 
 static inline u32 opcode(u32 instruction)
 {
@@ -12,6 +29,11 @@ static inline u32 opcode(u32 instruction)
 static inline u32 data(u32 instruction)
 {
 	return instruction & 0xffffff;
+}
+
+static inline u32 byte(u32 instruction, u8 number)
+{
+	return (instruction >> (8 * (3 - number))) & 0xff;
 }
 
 CPU::CPU() :
@@ -58,16 +80,53 @@ CPU::Load(FILE *input)
 	return byte == EOF;
 }
 
+u8*
+CPU::WhichRegister(u8 value)
+{
+	u8 *reg_ptr;
+	reg_ptr = &this->registers[(value & ~0x80) * sizeof(u32)];
+	if (value & 0x80)
+	{
+		if (*reg_ptr < this->mem_size)
+			return &this->memory[*reg_ptr * sizeof(u32)];
+		else
+			return NULL;
+	}
+	return reg_ptr;
+}
+
 CPU::ProgramState
 CPU::Tick()
 {
-	if (bytes2word(this->pc) >= mem_size)
-		return ERR_PC_BOUNDARY;
+	VALIDATE_PC()
 	u32 instruction = this->CurrentInstruction();
 	bytes_add(this->pc, 1);
 	switch (opcode(instruction))
 	{
 		case OP_NOP:
+			break;
+		case OP_HCF:
+			return HALTED;
+		case OP_MOV:
+			if (byte(instruction, 3))
+			{
+				VALIDATE_ARG(byte(instruction, 1))
+				VALIDATE_PC()
+				memcpy(
+					this->WhichRegister(byte(instruction, 1)),
+					this->memory + bytes2word(this->pc) * sizeof(u32),
+					sizeof(u32)
+				);
+				bytes_add(this->pc, 1);
+			}
+			else
+			{
+				VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+				word2bytes(
+					bytes2word(this->WhichRegister(byte(instruction, 2))),
+					this->WhichRegister(byte(instruction, 1))
+				);
+			}
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
