@@ -11,6 +11,8 @@ Table of contents:
 * Instruction length
 * Instruction set
   * Opcode table
+	* ALU flags
+	* Values table
 * Startup
 
 === Summary ====================================================================
@@ -47,6 +49,7 @@ value  | opcode     | description
 -------+------------+-----------------------------------------------------------
 0x00   | NOP        | no operation
 0x01   | HCF        | halt
+- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 0x02   | MOV  a b   | sets a to value of b when b is number,
        |            |   sets a to b otherwise
 0x03   | ADD  a b   | sets a to a + b
@@ -64,11 +67,13 @@ value  | opcode     | description
 0x0F   | OR   a b   | sets a to a | b
 0x10   | XOR  a b   | sets a to a ^ b
 0x11   | NOT  a     | negates a, and stores the result in a
+- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 0x12   | PUSH a     | push a to stack
 0x13   | POP  a     | pop value from stack and set a to it
+- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 0x14   | JMP  a     | sets PC the memory address of label a
 0x15   | JMR  a     | adds value of a to PC
-0x16   | CMP  a b   | compares a with b
+0x16   | CMP  a b   | compares a with b and sets flags
 0x17   | JZ   addr  | executes "JMP addr" if ZERO flag is set
 0x18   | JNZ  addr  | executes "JMP addr" if ZERO flag isn't set
 0x19   | JG   addr  | executes "JMP addr" if GREATER flag is set
@@ -78,6 +83,7 @@ value  | opcode     | description
 0x1D   | JC   addr  | executes "JMP addr" if CARRY flag is set
 0x1E   | JNC  addr  | executes "JMP addr" if CARRY flag isn't set
 0x1F   | LOOP addr  | executes "JMP addr" and "DEC LC" if LC > 0
+-------+------------+-----------------------------------------------------------
 
 --- ALU flags ------------------------------------------------------------------
 flag    | description
@@ -87,18 +93,21 @@ LOWER   | set by CMP if a < b
 GREATER | set by CMP if a > b
 CARRY   | set by ADD, SUB, MUL, SAL, SAR, INC, DEC, SHL and SHR
         |   if 32-bits limit is exceeded
+--------+-----------------------------------------------------------------------
 
 --- Values table ---------------------------------------------------------------
 value       | description
 ------------+-------------------------------------------------------------------
 0x00 - 0x0F | register (R0 .. R15)
-0x80 - 0x8F | [register]
 0x10        | loop counter
 0x11        | stack pointer
 0x12        | program counter
+0x80 - 0x8F | [register]
 0x90        | [loop counter]
 0x91        | [stack pointer]
 0x92        | [program counter]
+------------+-------------------------------------------------------------------
+
 
 === Startup ====================================================================
 
