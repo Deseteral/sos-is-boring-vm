@@ -1,6 +1,7 @@
 #include <cstdlib>
 
 #include "cpu.hpp"
+#include "../conversion.hpp"
 #include "../opcodes.hpp"
 
 static inline u32 opcode(u32 instruction)
@@ -14,7 +15,10 @@ static inline u32 data(u32 instruction)
 }
 
 CPU::CPU() :
-	pc(0), lc(0), sp(0), mem_size(0), memory(NULL),
+	lc(&this->registers[0x10 * sizeof(u32)]),
+	sp(&this->registers[0x11 * sizeof(u32)]),
+	pc(&this->registers[0x12 * sizeof(u32)]),
+	mem_size(0), memory(NULL),
 	registers({0}), stack({0}), flags({false, false, false, false}),
 	extension({0})
 {}
@@ -25,13 +29,15 @@ CPU::~CPU()
 }
 
 u32
-CPU::Instruction(u32 counter)
+CPU::CurrentInstruction()
 {
-	return
-		(this->memory[counter * sizeof(u32) + 0] << 24) |
-		(this->memory[counter * sizeof(u32) + 1] << 16) |
-		(this->memory[counter * sizeof(u32) + 2] << 8) 	|
-		(this->memory[counter * sizeof(u32) + 3] << 0);
+	return bytes2word(this->memory + bytes2word(this->pc) * sizeof(u32));
+}
+
+u32
+CPU::LastInstruction()
+{
+	return bytes2word(this->memory + (bytes2word(this->pc) - 1) * sizeof(u32));
 }
 
 bool
@@ -55,9 +61,10 @@ CPU::Load(FILE *input)
 CPU::ProgramState
 CPU::Tick()
 {
-	if (pc >= mem_size)
+	if (bytes2word(this->pc) >= mem_size)
 		return ERR_PC_BOUNDARY;
-	u32 instruction = this->Instruction(this->pc++);
+	u32 instruction = this->CurrentInstruction();
+	bytes_add(this->pc, 1);
 	switch (opcode(instruction))
 	{
 		case OP_NOP:
@@ -90,14 +97,15 @@ CPU::_SetErroredLine()
 		word_index < this->mem_size;
 		word_index += key.next()
 	) {
-		key.value = this->Instruction(word_index);
-		if (this->pc == word_index)
+		key.value = bytes2word(this->memory + word_index * sizeof(u32));
+		if (word_index == bytes2word(this->pc))
 		{
 			this->extension.errored_line =
 				(char *)(this->memory + word_index * sizeof(u32));
 			return;
 		}
-		else if (pc < key.word())  // instruction not present in source file
+		else if (key.word() > bytes2word(this->pc)) // instruction not present
+		                                            // in the source file
 			break;
 		else if (!key.next())  // no more lines follows
 			break;

@@ -19,14 +19,14 @@ struct CPU
 		u16 word() { return this->value >> 16;    }
 		u16 next() { return this->value & 0xffff; }
 	};
-	static const int NumberOfRegisters = 16;
+	static const int NumberOfRegisters = 16 + 3;
 	static const int StackSize = 256;
 
-	u32 pc, lc, sp;
+	u8 *lc, *sp, *pc;
 	u32 mem_size;
 	u8 *memory;
-	u32 registers[NumberOfRegisters];
-	u32 stack[StackSize];
+	u8 registers[NumberOfRegisters * sizeof(u32)];
+	u8 stack[StackSize * sizeof(u32)];
 	struct {
 		bool zero;
 		bool greater;
@@ -41,7 +41,8 @@ struct CPU
 
 	CPU();
 	~CPU();
-	u32 Instruction(u32);
+	u32 CurrentInstruction();
+	u32 LastInstruction();
 	bool Initialize(u32);
 	bool Load(FILE *);
 	ProgramState Tick();
