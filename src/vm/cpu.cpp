@@ -99,6 +99,8 @@ CPU::ProgramState
 CPU::Tick()
 {
 	VALIDATE_PC()
+	u8 *ptr1;
+	u64 result;
 	u32 instruction = this->CurrentInstruction();
 	bytes_add(this->pc, 1);
 	switch (opcode(instruction))
@@ -127,6 +129,15 @@ CPU::Tick()
 					this->WhichRegister(byte(instruction, 1))
 				);
 			}
+			break;
+		case OP_ADD:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			result =
+				(u64)bytes2word(ptr1) +
+				bytes2word(this->WhichRegister(byte(instruction, 2)));
+			word2bytes(result, ptr1);
+			this->flags.carry = (bool)(result != (u32)result);
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
