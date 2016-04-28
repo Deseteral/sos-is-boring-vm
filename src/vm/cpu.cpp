@@ -185,6 +185,34 @@ CPU::Tick()
 			if (bytes2word(ptr2) == 0)
 				return ERR_ZERO_DIVISION;
 			word2bytes((s32)bytes2word(ptr1) % (s32)bytes2word(ptr2), ptr1);
+		case OP_SAL:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = (bytes2word(ptr1) & ~(1 << 31)) << bytes2word(ptr2);
+			this->flags.overflow = (bool)(
+				((u32)result >> bytes2word(ptr2)) != (bytes2word(ptr1) & ~(1 << 31)) ||
+				(result & (1 << 31)) != 0  // we lose a bit
+			);
+			word2bytes(
+				(bytes2word(ptr1) << bytes2word(ptr2)) | (bytes2word(ptr1) & (1 << 31)),
+				ptr1
+			);
+			break;
+		case OP_SAR:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = bytes2word(ptr1) >> bytes2word(ptr2);
+			this->flags.overflow = (bool)(
+				((u32)result << bytes2word(ptr2)) != bytes2word(ptr1)
+			);
+			word2bytes((u32)result | (bytes2word(ptr1) & (1 << 31)), ptr1);
+			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
