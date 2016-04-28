@@ -17,11 +17,13 @@ int main(int argc, char *argv[])
 	const char *const Help = "SOS is boring VM - simple virtual machine\n"
 	"Syntax: vm [arguments] [input file]\n"
 	"Arguments:\n"
+	"  -d FILE, --dump FILE  print memory dump to a file\n"
 	"  -h, --help            print this help text\n"
 	"  -s SIZE, --size SIZE  set memory size in 32-bit words\n"
 	"  -u, --usage           short usage information\n"
 	"  -v, --version         display program version";
 	const struct option LongOptions[] = {
+		{"dump", 1, NULL, 'd'},
 		{"help", 0, NULL, 'h'},
 		{"size", 1, NULL, 's'},
 		{"usage", 0, NULL, 'u'},
@@ -30,9 +32,13 @@ int main(int argc, char *argv[])
 	};
 	u32 mem_size = 16 * 1024;
 	char *input_file = NULL;
+	char *dump_file = NULL;
 	for (int option, long_option_index; (option = getopt_long(argc, argv, "hs:uv", LongOptions, &long_option_index)) != -1;)
 		switch (option)
 		{
+			case 'd':
+				dump_file = optarg;
+				break;
 			case 'h':
 				puts(Help);
 				return 0;
@@ -82,6 +88,18 @@ int main(int argc, char *argv[])
 	CPU::ProgramState state;
 	while ((state = cpu.Tick()) == CPU::OK)
 		continue;
+	FILE *dump;
+	if (dump_file != NULL)
+	{
+		if ((dump = fopen(input_file, "wb")) == NULL)
+		{
+			fprintf(stderr, "Cannot open file \"%s\" for writing.\n", dump_file);
+			return ENOENT;
+		}
+		for (u32 i = 0; i < cpu.mem_size * sizeof(u32); ++i)
+			putc(cpu.memory[i], dump);
+		fclose(dump);
+	}
 	switch (state)
 	{
 		case CPU::HALTED:
