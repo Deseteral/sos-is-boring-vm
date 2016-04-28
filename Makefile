@@ -5,9 +5,9 @@ OBJS= obj/asm.o obj/cpu.o obj/vm.o
 
 all: asm vm
 
-asm: obj/asm.o
+asm: obj/assembler.o obj/asm.o
 	mkdir -p bin
-	${CXX} -o bin/asm.elf ${CXXFLAGS} obj/asm.o ${LFLAGS}
+	${CXX} -o bin/asm.elf ${CXXFLAGS} obj/asm.o obj/assembler.o ${LFLAGS}
 
 vm: obj/cpu.o obj/vm.o
 	mkdir -p bin
@@ -24,6 +24,10 @@ obj/vm.o: src/vm/vm_main.cpp src/opcodes.hpp src/types.hpp
 obj/cpu.o: src/vm/cpu.cpp src/opcodes.hpp src/vm/cpu.hpp src/types.hpp
 	mkdir -p obj
 	${CXX} -c -o obj/cpu.o ${CXXFLAGS} src/vm/cpu.cpp
+
+obj/assembler.o: src/asm/assembler.cpp src/asm/assembler.hpp src/opcodes.hpp src/types.hpp
+	mkdir -p obj
+	${CXX} -c -o obj/assembler.o ${CXXFLAGS} src/asm/assembler.cpp
 
 clean:
 	rm -f ${OBJS}
