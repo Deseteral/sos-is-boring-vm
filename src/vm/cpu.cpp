@@ -141,7 +141,7 @@ CPU::Tick()
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) + (s32)bytes2word(ptr2);
-			word2bytes(result, ptr1);
+			word2bytes((s32)result, ptr1);
 			this->flags.carry =
 				(bool)(result != (s32)result && (u64)result != (u32)result);
 			break;
