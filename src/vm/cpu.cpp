@@ -142,8 +142,8 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) + (s32)bytes2word(ptr2);
 			word2bytes((s32)result, ptr1);
-			this->flags.carry =
-				(bool)(result != (s32)result && (u64)result != (u32)result);
+			this->flags.overflow = (bool)(result != (s32)result);
+			this->flags.carry = (bool)((u64)result != (u32)result);
 			break;
 		case OP_SUB:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
@@ -153,8 +153,8 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) - (s32)bytes2word(ptr2);
 			word2bytes((s32)result, ptr1);
-			this->flags.carry =
-				(bool)(result != (s32)result && (u64)result != (u32)result);
+			this->flags.overflow = (bool)(result != (s32)result);
+			this->flags.carry = (bool)((u64)result != (u32)result);
 			break;
 		case OP_MUL:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
@@ -164,8 +164,8 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) * (s32)bytes2word(ptr2);
 			word2bytes((s32)result, ptr1);
-			this->flags.carry =
-				(bool)(result != (s32)result && (u64)result != (u32)result);
+			this->flags.overflow = (bool)(result != (s32)result);
+			this->flags.carry = (bool)((u64)result != (u32)result);
 			break;
 		case OP_DIV:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))

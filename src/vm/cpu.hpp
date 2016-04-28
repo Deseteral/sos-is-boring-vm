@@ -31,6 +31,7 @@ struct CPU
 		bool zero;
 		bool greater;
 		bool lower;
+		bool overflow;
 		bool carry;
 	} flags;
 	union {

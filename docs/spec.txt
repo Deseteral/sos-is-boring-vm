@@ -87,14 +87,16 @@ value  | opcode     | description
 -------+------------+-----------------------------------------------------------
 
 --- ALU flags ------------------------------------------------------------------
-flag    | description
---------+-----------------------------------------------------------------------
-ZERO    | set by CMP if a = b
-LOWER   | set by CMP if a < b
-GREATER | set by CMP if a > b
-CARRY   | set by ADD, SUB, MUL, SAL, SAR, INC, DEC, SHL and SHR
-        |   if 32-bits limit is exceeded
---------+-----------------------------------------------------------------------
+flag     | description
+---------+----------------------------------------------------------------------
+ZERO     | set by CMP if a = b
+LOWER    | set by CMP if a < b
+GREATER  | set by CMP if a > b
+OVERFLOW | set by ADD, SUB, MUL, SAL, SAR, INC and DEC
+         |   if 31-bits limit is exceeded (signed carry)
+CARRY    | set by ADD, SUB, MUL, INC, DEC, SHL and SHR
+         |   if 32-bits limit is exceeded (unsigned carry)
+---------+----------------------------------------------------------------------
 
 --- Values table ---------------------------------------------------------------
 value       | description
