@@ -17,6 +17,7 @@ Table of contents:
 
 === Summary ====================================================================
 * 32-bit architecture
+* numbers are stored in two's complement 
 * big endian
 * registers:
   * 16 general use registers: R0 .. R15
