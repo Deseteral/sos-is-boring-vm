@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	"Arguments:\n"
 	"  -d FILE, --dump FILE  print memory dump to a file\n"
 	"  -h, --help            print this help text\n"
-	"  -s SIZE, --size SIZE  set memory size in 32-bit words\n"
+	"  -s SIZE, --size SIZE  set memory size in 32-bit words (less than 2^30)\n"
 	"  -u, --usage           short usage information\n"
 	"  -v, --version         display program version";
 	const struct option LongOptions[] = {
@@ -43,7 +43,7 @@ int main(int argc, char *argv[])
 				puts(Help);
 				return 0;
 			case 's':
-				if (sscanf(optarg, "%u", &mem_size) != 1) {
+				if (sscanf(optarg, "%u", &mem_size) != 1 || mem_size >= (1 << 30)) {
 					fprintf(stderr, "Invalid memory size parameter \"%s\".\n", optarg);
 					return EINVAL;
 				}
