@@ -142,7 +142,8 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) + (s32)bytes2word(ptr2);
 			word2bytes(result, ptr1);
-			this->flags.carry = (bool)(result != (s32)result);
+			this->flags.carry =
+				(bool)(result != (s32)result && (u64)result != (u32)result);
 			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
