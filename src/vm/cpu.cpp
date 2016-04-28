@@ -145,6 +145,47 @@ CPU::Tick()
 			this->flags.carry =
 				(bool)(result != (s32)result && (u64)result != (u32)result);
 			break;
+		case OP_SUB:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = (s64)(s32)bytes2word(ptr1) - (s32)bytes2word(ptr2);
+			word2bytes((s32)result, ptr1);
+			this->flags.carry =
+				(bool)(result != (s32)result && (u64)result != (u32)result);
+			break;
+		case OP_MUL:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = (s64)(s32)bytes2word(ptr1) * (s32)bytes2word(ptr2);
+			word2bytes((s32)result, ptr1);
+			this->flags.carry =
+				(bool)(result != (s32)result && (u64)result != (u32)result);
+			break;
+		case OP_DIV:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			if (bytes2word(ptr2) == 0)
+				return ERR_ZERO_DIVISION;
+			word2bytes((s32)bytes2word(ptr1) / (s32)bytes2word(ptr2), ptr1);
+			break;
+		case OP_MOD:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			if (bytes2word(ptr2) == 0)
+				return ERR_ZERO_DIVISION;
+			word2bytes((s32)bytes2word(ptr1) % (s32)bytes2word(ptr2), ptr1);
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {

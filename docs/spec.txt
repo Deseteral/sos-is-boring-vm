@@ -56,8 +56,8 @@ value  | opcode     | description
 0x03   | ADD  a b   | sets a to a + b
 0x04   | SUB  a b   | sets a to a - b
 0x05   | MUL  a b   | sets a to a * b
-0x06   | DIV  a b   | sets a to a / b
-0x07   | MOD  a b   | sets a to a % b
+0x06   | DIV  a b   | sets a to a / b (signed only)
+0x07   | MOD  a b   | sets a to a % b (signed only)
 0x08   | SAL  a b   | sets a to a << b (sign bit preserved)
 0x09   | SAR  a b   | sets a to a >> b (sign bit preserved)
 0x0A   | INC  a     | sets a to a + 1
