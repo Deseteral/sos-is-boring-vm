@@ -55,7 +55,7 @@ value  | opcode     | description
        |            |   sets a to b otherwise
 0x03   | ADD  a b   | sets a to a + b
 0x04   | SUB  a b   | sets a to a - b
-0x05   | MUL  a b   | sets a to a * b
+0x05   | MUL  a b   | sets a to a * b (signed only)
 0x06   | DIV  a b   | sets a to a / b (signed only)
 0x07   | MOD  a b   | sets a to a % b (signed only)
 0x08   | SAL  a b   | sets a to a << b (sign bit preserved)
@@ -94,7 +94,7 @@ LOWER    | set by CMP if a < b
 GREATER  | set by CMP if a > b
 OVERFLOW | set by ADD, SUB, MUL, SAL, SAR, INC and DEC
          |   if 31-bits limit is exceeded (signed carry)
-CARRY    | set by ADD, SUB, MUL, INC, DEC, SHL and SHR
+CARRY    | set by ADD, SUB, INC, DEC, SHL and SHR
          |   if 32-bits limit is exceeded (unsigned carry)
 ---------+----------------------------------------------------------------------
 

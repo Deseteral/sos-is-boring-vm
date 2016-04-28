@@ -165,7 +165,6 @@ CPU::Tick()
 			result = (s64)(s32)bytes2word(ptr1) * (s32)bytes2word(ptr2);
 			word2bytes((s32)result, ptr1);
 			this->flags.overflow = (bool)(result != (s32)result);
-			this->flags.carry = (bool)((u64)result != (u32)result);
 			break;
 		case OP_DIV:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
