@@ -41,8 +41,8 @@ CPU::CPU() :
 	sp(&this->registers[0x11 * sizeof(u32)]),
 	pc(&this->registers[0x12 * sizeof(u32)]),
 	mem_size(0), memory(NULL),
-	registers({0}), stack({0}), flags({false, false, false, false}),
-	extension({0})
+	registers{0}, stack{0}, flags{false, false, false, false},
+	extension{0}
 {}
 
 CPU::~CPU()
