@@ -213,6 +213,46 @@ CPU::Tick()
 			);
 			word2bytes((u32)result | (bytes2word(ptr1) & (1 << 31)), ptr1);
 			break;
+		case OP_INC:
+			VALIDATE_ARG(byte(instruction, 1))
+			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes((s32)bytes2word(ptr1) + 1, ptr1);
+			this->flags.overflow = (bool)(bytes2word(ptr1) == (u32)(1 << 31));
+			this->flags.carry = (bool)(bytes2word(ptr1) == 0);
+			break;
+		case OP_DEC:
+			VALIDATE_ARG(byte(instruction, 1))
+			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
+				return ERR_ADDRESS_BOUNDARY;
+			this->flags.overflow = (bool)(bytes2word(ptr1) == (u32)(1 << 31));
+			this->flags.carry = (bool)(bytes2word(ptr1) == 0);
+			word2bytes((s32)bytes2word(ptr1) - 1, ptr1);
+			break;
+		case OP_SHL:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = bytes2word(ptr1) << bytes2word(ptr2);
+			this->flags.carry = (bool)(
+				((u32)result >> bytes2word(ptr2)) != bytes2word(ptr1)
+			);
+			word2bytes((u32)result, ptr1);
+			break;
+		case OP_SHR:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			result = bytes2word(ptr1) >> bytes2word(ptr2);
+			this->flags.carry = (bool)(
+				((u32)result << bytes2word(ptr2)) != bytes2word(ptr1)
+			);
+			word2bytes((u32)result, ptr1);
+			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
