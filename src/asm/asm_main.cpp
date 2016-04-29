@@ -71,8 +71,8 @@ int main(int argc, char *argv[])
 
 	Assemble(input, output);
 
-	fclose(output);
 	fclose(input);
+	fclose(output);
 
 	return 0;
 }
