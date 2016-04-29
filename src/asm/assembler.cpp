@@ -5,14 +5,7 @@
 
 #include "../opcodes.hpp"
 
-void StringToUpperCase(char *str)
-{
-	for (int i = 0; str[i] != '\0'; i++)
-	{
-		if (str[i] >= 'a' && str[i] <= 'z')
-		  str[i] -= 32;
-	}
-}
+#define IF_OPCODE(VALUE) if (strcmp(opcode, VALUE) == 0)
 
 #define TOKEN_TYPE_NOTHING  0
 #define TOKEN_TYPE_REGISTER 1
@@ -31,6 +24,15 @@ struct Instruction
 	Token values[3];
 };
 
+void StringToUpperCase(char *str)
+{
+	for (int i = 0; str[i] != '\0'; i++)
+	{
+		if (str[i] >= 'a' && str[i] <= 'z')
+		  str[i] -= 32;
+	}
+}
+
 void Assemble(FILE *input_file, FILE *output_file)
 {
 	char opcode[32];
@@ -44,10 +46,13 @@ void Assemble(FILE *input_file, FILE *output_file)
 		bool is_valid = true;
 
 		Instruction ins;
-		if (strcmp(opcode, "NOP") == 0)
+		IF_OPCODE("NOP")
 			ins.opcode = OP_NOP;
-		else if (strcmp(opcode, "HCF") == 0)
+		else IF_OPCODE("HCF")
 			ins.opcode = OP_HCF;
+		else IF_OPCODE("MOV")
+			// TODO(deseteral): This is tricky, will get to that later
+			ins.opcode = OP_MOV;
 		else
 			is_valid = false;
 
@@ -61,7 +66,7 @@ void Assemble(FILE *input_file, FILE *output_file)
 	}
 
 	// Write to file
-	for (int i = 0; i < instructions.size(); i++)
+	for (u32 i = 0; i < instructions.size(); i++)
 	{
 		fwrite(&instructions[i].opcode, 1, 1, output_file);
 
