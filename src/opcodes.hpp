@@ -28,13 +28,19 @@
 #define OP_CMP  0x18
 #define OP_JZ   0x19
 #define OP_JNZ  0x1A
-#define OP_JG   0x1B
-#define OP_JNG  0x1C
+#define OP_JB   0x1B
+#define OP_JNB  0x1C
 #define OP_JL   0x1D
 #define OP_JNL  0x1E
-#define OP_JC   0x1F
-#define OP_JNC  0x20
-#define OP_LOOP 0x21
+#define OP_JA   0x1F
+#define OP_JNA  0x20
+#define OP_JG   0x21
+#define OP_JNG  0x22
+#define OP_JO   0x23
+#define OP_JNO  0x24
+#define OP_JC   0x25
+#define OP_JNC  0x26
+#define OP_LOOP 0x27
 
 // extensions
 #define _OP_SIZE  0xF0
