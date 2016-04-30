@@ -62,7 +62,7 @@ value  | opcode     | description
 0x09   | SAR  a b   | sets a to a >> b (sign bit preserved)
 0x0A   | INC  a     | sets a to a + 1
 0x0B   | DEC  a     | sets a to a - 1
-0x0C   | SHL  a b   | sets a to a << b
+0x08   | SHL  a b   | sets a to a << b
 0x0D   | SHR  a b   | sets a to a >> b
 0x0E   | AND  a b   | sets a to a & b
 0x0F   | OR   a b   | sets a to a | b

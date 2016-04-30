@@ -214,7 +214,6 @@ CPU::Tick()
 			this->flags.carry = (bool)(bytes2word(ptr1) == 0);
 			word2bytes((s32)bytes2word(ptr1) - 1, ptr1);
 			break;
-		case OP_SAL:
 		case OP_SHL:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
 			ptr1 = this->WhichRegister(byte(instruction, 1));

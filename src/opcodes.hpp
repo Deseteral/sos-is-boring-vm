@@ -12,7 +12,7 @@
 #define OP_SAR  0x09
 #define OP_INC  0x0A
 #define OP_DEC  0x0B
-#define OP_SHL  0x0C
+#define OP_SHL  0x08
 #define OP_SHR  0x0D
 #define OP_AND  0x0E
 #define OP_OR   0x0F
