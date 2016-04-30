@@ -17,7 +17,7 @@ VALIDATE_ARG(val2)
 
 #define VALIDATE_PC()\
 {\
-	if (bytes2word(this->pc) >= mem_size)\
+	if (bytes2word(this->pc) >= this->mem_size)\
 		return ERR_PC_BOUNDARY;\
 }
 
