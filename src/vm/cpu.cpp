@@ -115,14 +115,9 @@ CPU::Tick()
 			{
 				VALIDATE_ARG(byte(instruction, 1))
 				VALIDATE_PC()
-				ptr1 = this->WhichRegister(byte(instruction, 1));
-				if (!ptr1)
+				if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
 					return ERR_ADDRESS_BOUNDARY;
-				memcpy(
-					ptr1,
-					this->memory + bytes2word(this->pc) * sizeof(u32),
-					sizeof(u32)
-				);
+				word2bytes(this->CurrentInstruction(), ptr1);
 				bytes_add(this->pc, 1);
 			}
 			else
@@ -311,10 +306,8 @@ CPU::Tick()
 			bytes_add(this->sp, -1);
 			break;
 		case OP_JMP:
-			VALIDATE_ARG(byte(instruction, 1))
-			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
-				return ERR_ADDRESS_BOUNDARY;
-			word2bytes(bytes2word(ptr1), this->pc);
+			VALIDATE_PC()
+			word2bytes(this->CurrentInstruction(), this->pc);
 			break;
 		case OP_JMR:
 			VALIDATE_ARG(byte(instruction, 1))
