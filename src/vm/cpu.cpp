@@ -238,6 +238,36 @@ CPU::Tick()
 			);
 			word2bytes((u32)result, ptr1);
 			break;
+		case OP_AND:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes(bytes2word(ptr1) & bytes2word(ptr2), ptr1);
+			break;
+		case OP_OR:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes(bytes2word(ptr1) | bytes2word(ptr2), ptr1);
+			break;
+		case OP_XOR:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes(bytes2word(ptr1) ^ bytes2word(ptr2), ptr1);
+			break;
+		case OP_NOT:
+			VALIDATE_ARG(byte(instruction, 1))
+			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes(~bytes2word(ptr1), ptr1);
+			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
