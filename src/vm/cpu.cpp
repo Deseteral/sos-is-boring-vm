@@ -286,6 +286,18 @@ CPU::Tick()
 			word2bytes(bytes2word(ptr1), stack + word * sizeof(u32));
 			bytes_add(this->sp, -1);
 			break;
+		case OP_JMP:
+			VALIDATE_ARG(byte(instruction, 1))
+			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
+				return ERR_ADDRESS_BOUNDARY;
+			word2bytes(bytes2word(ptr1), this->pc);
+			break;
+		case OP_JMR:
+			VALIDATE_ARG(byte(instruction, 1))
+			if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
+				return ERR_ADDRESS_BOUNDARY;
+			bytes_add(this->pc, bytes2word(ptr1));
+			break;
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
