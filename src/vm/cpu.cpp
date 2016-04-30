@@ -193,7 +193,7 @@ CPU::Tick()
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
 			word = bytes2word(ptr1) >> bytes2word(ptr2);
-			this->flags.overflow = (bool)(
+			this->flags.carry = (bool)(
 				(word << bytes2word(ptr2)) != bytes2word(ptr1)
 			);
 			word2bytes(word | (bytes2word(ptr1) & (1 << 31)), ptr1);
