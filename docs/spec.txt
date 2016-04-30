@@ -55,35 +55,38 @@ value  | opcode     | description
        |            |   sets a to b otherwise
 0x03   | ADD  a b   | sets a to a + b
 0x04   | SUB  a b   | sets a to a - b
-0x05   | MUL  a b   | sets a to a * b (signed only)
-0x06   | DIV  a b   | sets a to a / b (signed only)
-0x07   | MOD  a b   | sets a to a % b (signed only)
-0x08   | SAL  a b   | sets a to a << b
-0x09   | SAR  a b   | sets a to a >> b (sign bit preserved)
-0x0A   | INC  a     | sets a to a + 1
-0x0B   | DEC  a     | sets a to a - 1
-0x08   | SHL  a b   | sets a to a << b
-0x0D   | SHR  a b   | sets a to a >> b
-0x0E   | AND  a b   | sets a to a & b
-0x0F   | OR   a b   | sets a to a | b
-0x10   | XOR  a b   | sets a to a ^ b
-0x11   | NOT  a     | negates a, and stores the result in a
+0x05   | MUL  a b   | sets a to a * b
+0x06   | IMUL a b   | sets a to a * b (signed only)
+0x07   | DIV  a b   | sets a to a / b
+0x08   | IDIV a b   | sets a to a / b (signed only)
+0x09   | MOD  a b   | sets a to a % b
+0x0A   | IMOD a b   | sets a to a % b (signed only)
+0x0B   | INC  a     | sets a to a + 1
+0x0C   | DEC  a     | sets a to a - 1
+0x0D   | SAR  a b   | sets a to a >> b (sign bit preserved)
+0x0E   | SAL  a b   | sets a to a << b
+       | SHL  a b   |
+0x0F   | SHR  a b   | sets a to a >> b
+0x10   | AND  a b   | sets a to a & b
+0x11   | OR   a b   | sets a to a | b
+0x12   | XOR  a b   | sets a to a ^ b
+0x13   | NOT  a     | negates a, and stores the result in a
 - - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x12   | PUSH a     | push a to stack
-0x13   | POP  a     | pop value from stack and set a to it
+0x14   | PUSH a     | push a to stack
+0x15   | POP  a     | pop value from stack and set a to it
 - - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x14   | JMP  a     | sets PC the memory address of label a
-0x15   | JMR  a     | adds value of a to PC
-0x16   | CMP  a b   | compares a with b and sets flags
-0x17   | JZ   addr  | executes "JMP addr" if ZERO flag is set
-0x18   | JNZ  addr  | executes "JMP addr" if ZERO flag isn't set
-0x19   | JG   addr  | executes "JMP addr" if GREATER flag is set
-0x1A   | JNG  addr  | executes "JMP addr" if GREATER flag isn't set
-0x1B   | JL   addr  | executes "JMP addr" if LOWER flag is set
-0x1C   | JNL  addr  | executes "JMP addr" if LOWER flag isn't set
-0x1D   | JC   addr  | executes "JMP addr" if CARRY flag is set
-0x1E   | JNC  addr  | executes "JMP addr" if CARRY flag isn't set
-0x1F   | LOOP addr  | executes "JMP addr" and "DEC LC" if LC > 0
+0x16   | JMP  a     | sets PC the memory address of label a
+0x17   | JMR  a     | adds value of a to PC
+0x18   | CMP  a b   | compares a with b and sets flags
+0x19   | JZ   addr  | executes "JMP addr" if ZERO flag is set
+0x1A   | JNZ  addr  | executes "JMP addr" if ZERO flag isn't set
+0x1B   | JG   addr  | executes "JMP addr" if GREATER flag is set
+0x1C   | JNG  addr  | executes "JMP addr" if GREATER flag isn't set
+0x1D   | JL   addr  | executes "JMP addr" if LOWER flag is set
+0x1E   | JNL  addr  | executes "JMP addr" if LOWER flag isn't set
+0x1F   | JC   addr  | executes "JMP addr" if CARRY flag is set
+0x20   | JNC  addr  | executes "JMP addr" if CARRY flag isn't set
+0x21   | LOOP addr  | executes "JMP addr" and "DEC LC" if LC > 0
 -------+------------+-----------------------------------------------------------
 
 --- ALU flags ------------------------------------------------------------------
@@ -92,9 +95,9 @@ flag     | description
 ZERO     | set by CMP if a = b
 LOWER    | set by CMP if a < b
 GREATER  | set by CMP if a > b
-OVERFLOW | set by ADD, SUB, MUL, INC and DEC
+OVERFLOW | set by ADD, SUB, IMUL, INC and DEC
          |   if 31-bits limit is exceeded (signed carry)
-CARRY    | set by ADD, SUB, SAL, SAR, INC, DEC, SHL and SHR
+CARRY    | set by ADD, SUB, MUL, INC, DEC, SAR, SHL and SHR
          |   if 32-bits limit is exceeded (unsigned carry)
 ---------+----------------------------------------------------------------------
 

@@ -163,11 +163,31 @@ CPU::Tick()
 			ptr2 = this->WhichRegister(byte(instruction, 2));
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
+			result = (s64)bytes2word(ptr1) * bytes2word(ptr2);
+			word2bytes((u32)result, ptr1);
+			this->flags.carry = (bool)(result != (u32)result);
+			break;
+		case OP_IMUL:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
 			result = (s64)(s32)bytes2word(ptr1) * (s32)bytes2word(ptr2);
 			word2bytes((s32)result, ptr1);
 			this->flags.overflow = (bool)(result != (s32)result);
 			break;
 		case OP_DIV:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			if (bytes2word(ptr2) == 0)
+				return ERR_ZERO_DIVISION;
+			word2bytes(bytes2word(ptr1) / bytes2word(ptr2), ptr1);
+			break;
+		case OP_IDIV:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
 			ptr1 = this->WhichRegister(byte(instruction, 1));
 			ptr2 = this->WhichRegister(byte(instruction, 2));
@@ -185,18 +205,17 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			if (bytes2word(ptr2) == 0)
 				return ERR_ZERO_DIVISION;
-			word2bytes((s32)bytes2word(ptr1) % (s32)bytes2word(ptr2), ptr1);
-		case OP_SAR:
+			word2bytes(bytes2word(ptr1) % bytes2word(ptr2), ptr1);
+			break;
+		case OP_IMOD:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
 			ptr1 = this->WhichRegister(byte(instruction, 1));
 			ptr2 = this->WhichRegister(byte(instruction, 2));
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
-			word = bytes2word(ptr1) >> bytes2word(ptr2);
-			this->flags.carry = (bool)(
-				(word << bytes2word(ptr2)) != bytes2word(ptr1)
-			);
-			word2bytes(word | (bytes2word(ptr1) & (1 << 31)), ptr1);
+			if (bytes2word(ptr2) == 0)
+				return ERR_ZERO_DIVISION;
+			word2bytes((s32)bytes2word(ptr1) % (s32)bytes2word(ptr2), ptr1);
 			break;
 		case OP_INC:
 			VALIDATE_ARG(byte(instruction, 1))
@@ -213,6 +232,18 @@ CPU::Tick()
 			this->flags.overflow = (bool)(bytes2word(ptr1) == (u32)(1 << 31));
 			this->flags.carry = (bool)(bytes2word(ptr1) == 0);
 			word2bytes((s32)bytes2word(ptr1) - 1, ptr1);
+			break;
+		case OP_SAR:
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			word = bytes2word(ptr1) >> bytes2word(ptr2);
+			this->flags.carry = (bool)(
+				(word << bytes2word(ptr2)) != bytes2word(ptr1)
+			);
+			word2bytes(word | (bytes2word(ptr1) & (1 << 31)), ptr1);
 			break;
 		case OP_SHL:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
