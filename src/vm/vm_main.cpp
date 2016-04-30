@@ -43,8 +43,18 @@ int main(int argc, char *argv[])
 				puts(Help);
 				return 0;
 			case 's':
-				if (sscanf(optarg, "%u", &mem_size) != 1 || mem_size >= (1 << 30)) {
+				if (sscanf(optarg, "%u", &mem_size) != 1)
+				{
 					fprintf(stderr, "Invalid memory size parameter \"%s\".\n", optarg);
+					return EINVAL;
+				}
+				if (mem_size > CPU::MaxMemorySize)
+				{
+					fprintf(
+						stderr,
+						"Memory size must not exceed %d.\n",
+						CPU::MaxMemorySize
+					);
 					return EINVAL;
 				}
 				break;
