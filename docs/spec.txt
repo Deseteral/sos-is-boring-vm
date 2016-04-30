@@ -97,7 +97,7 @@ LOWER    | set by CMP if a < b
 GREATER  | set by CMP if a > b
 OVERFLOW | set by ADD, SUB, IMUL, INC and DEC
          |   if 31-bits limit is exceeded (signed carry)
-CARRY    | set by ADD, SUB, MUL, INC, DEC, SAR, SHL and SHR
+CARRY    | set by ADD, SUB, MUL, INC, DEC, SAL and SHL
          |   if 32-bits limit is exceeded (unsigned carry)
 ---------+----------------------------------------------------------------------
 

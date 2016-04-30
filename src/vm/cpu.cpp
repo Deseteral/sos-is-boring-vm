@@ -239,11 +239,8 @@ CPU::Tick()
 			ptr2 = this->WhichRegister(byte(instruction, 2));
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
-			word = bytes2word(ptr1) >> bytes2word(ptr2);
-			this->flags.carry = (bool)(
-				(word << bytes2word(ptr2)) != bytes2word(ptr1)
-			);
-			word2bytes(word | (bytes2word(ptr1) & (1 << 31)), ptr1);
+			word = bytes2word(ptr1);
+			word2bytes((word >> bytes2word(ptr2)) | (word & (1 << 31)), ptr1);
 			break;
 		case OP_SHL:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
@@ -263,11 +260,7 @@ CPU::Tick()
 			ptr2 = this->WhichRegister(byte(instruction, 2));
 			if (!ptr1 || !ptr2)
 				return ERR_ADDRESS_BOUNDARY;
-			word = bytes2word(ptr1) >> bytes2word(ptr2);
-			this->flags.carry = (bool)(
-				(word << bytes2word(ptr2)) != bytes2word(ptr1)
-			);
-			word2bytes(word, ptr1);
+			word2bytes(bytes2word(ptr1) >> bytes2word(ptr2), ptr1);
 			break;
 		case OP_AND:
 			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
