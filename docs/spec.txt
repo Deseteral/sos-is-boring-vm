@@ -75,7 +75,7 @@ value  | opcode     | description
 0x14   | PUSH a     | push a to stack
 0x15   | POP  a     | pop value from stack and set a to it
 - - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x16   | JMP  a     | sets PC the memory address of label a
+0x16   | JMP  addr  | sets PC the memory address of label addr
 0x17   | JMR  a     | adds value of a to PC
 0x18   | CMP  a b   | compares a with b and sets flags
 0x19   | JZ   addr  | executes "JMP addr" if ZERO flag is set
