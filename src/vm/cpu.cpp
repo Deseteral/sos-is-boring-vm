@@ -15,6 +15,15 @@ VALIDATE_ARG(val2)
 		return ERR_INVALID_ARG;\
 }
 
+#define CONDITIONAL_JUMP(condition)\
+{\
+	if (condition)\
+		word2bytes(this->CurrentInstruction(), this->pc);\
+	else\
+		bytes_add(this->pc, 1);\
+}
+
+
 #define VALIDATE_PC()\
 {\
 	if (bytes2word(this->pc) >= this->mem_size)\
@@ -331,7 +340,56 @@ CPU::Tick()
 			this->flags.greater = (bool)((s32)word1 > (s32)word2);
 			break;
 		}
-		// TODO: add remaining opcodes
+		case OP_JZ:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(this->flags.zero)
+			break;
+		case OP_JNZ:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(!this->flags.zero)
+			break;
+		case OP_JB:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(this->flags.below)
+			break;
+		case OP_JNB:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(!this->flags.below)
+			break;
+		case OP_JL:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(this->flags.lower)
+			break;
+		case OP_JNL:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(!this->flags.lower)
+			break;
+		case OP_JA:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(this->flags.above)
+			break;
+		case OP_JNA:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(!this->flags.above)
+			break;
+		case OP_JG:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(this->flags.greater)
+			break;
+		case OP_JNG:
+			VALIDATE_PC()
+			CONDITIONAL_JUMP(!this->flags.greater)
+			break;
+		case OP_LOOP:
+			VALIDATE_PC()
+			if (bytes2word(this->lc))
+			{
+				bytes_add(this->lc, -1);
+				word2bytes(this->CurrentInstruction(), this->pc);
+			}
+			else
+				bytes_add(this->pc, 1);
+			break;
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
 				this->extension.required_memory = data(instruction);
