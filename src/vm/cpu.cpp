@@ -322,6 +322,22 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			bytes_add(this->pc, bytes2word(ptr1));
 			break;
+		case OP_CMP:
+		{
+			VALIDATE_ARGS(byte(instruction, 1), byte(instruction, 2))
+			ptr1 = this->WhichRegister(byte(instruction, 1));
+			ptr2 = this->WhichRegister(byte(instruction, 2));
+			if (!ptr1 || !ptr2)
+				return ERR_ADDRESS_BOUNDARY;
+			u32 word1 = bytes2word(ptr1);
+			u32 word2 = bytes2word(ptr2);
+			this->flags.zero = (bool)(word1 == word2);
+			this->flags.below = (bool)(word1 < word2);
+			this->flags.lower = (bool)((s32)word1 < (s32)word2);
+			this->flags.above = (bool)(word1 > word2);
+			this->flags.greater = (bool)((s32)word1 > (s32)word2);
+			break;
+		}
 		// TODO: add remaining opcodes
 		case _OP_SIZE:
 			if (this->mem_size < data(instruction)) {
