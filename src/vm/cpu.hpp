@@ -29,8 +29,10 @@ struct CPU
 	u8 stack[StackSize * sizeof(u32)];
 	struct {
 		bool zero;
-		bool greater;
+		bool below;
 		bool lower;
+		bool above;
+		bool greater;
 		bool overflow;
 		bool carry;
 	} flags;

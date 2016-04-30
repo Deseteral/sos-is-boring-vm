@@ -93,8 +93,10 @@ value  | opcode     | description
 flag     | description
 ---------+----------------------------------------------------------------------
 ZERO     | set by CMP if a = b
-LOWER    | set by CMP if a < b
-GREATER  | set by CMP if a > b
+BELOW    | set by CMP if a < b
+LOWER    | set by CMP if a < b (signed only)
+ABOVE    | set by CMP if a > b
+GREATER  | set by CMP if a > b (signed only)
 OVERFLOW | set by ADD, SUB, IMUL, INC and DEC
          |   if 31-bits limit is exceeded (signed carry)
 CARRY    | set by ADD, SUB, MUL, INC, DEC, SAL and SHL
