@@ -6,7 +6,7 @@
 
 void print_debug_info(CPU *cpu)
 {
-	if (cpu->extension.errored_line)
+	if (cpu->_SetErroredLine())
 		fprintf(stderr, "line %s\n", cpu->extension.errored_line);
 	fprintf(stderr, "errored instruction: 0x%.8X\n", cpu->LastInstruction());
 	return;

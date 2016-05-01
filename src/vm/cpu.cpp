@@ -23,7 +23,6 @@ VALIDATE_ARG(val2)
 		bytes_add(this->pc, 1);\
 }
 
-
 #define VALIDATE_PC()\
 {\
 	if (bytes2word(this->pc) >= this->mem_size)\
@@ -391,44 +390,56 @@ CPU::Tick()
 				bytes_add(this->pc, 1);
 			break;
 		case _OP_SIZE:
-			if (this->mem_size < data(instruction)) {
-				this->extension.required_memory = data(instruction);
+			VALIDATE_PC()
+			if (this->mem_size < this->CurrentInstruction())
+			{
+				this->extension.required_memory = this->CurrentInstruction();
 				return _ERR_SIZE;
 			}
+			bytes_add(this->pc, 1);
 			break;
 		case _OP_DEBUG:
-			this->extension.debug_info = data(instruction);
+			VALIDATE_PC()
+			this->extension.debug_info = this->CurrentInstruction();
+			bytes_add(this->pc, 1);
 			break;
 		default:
-			this->_SetErroredLine();
 			return ERR_INVALID_OPCODE;
 	}
 	return OK;
 }
 
-void
+struct DebugSymbol {
+	u32 value;
+
+	u16 word_num() { return this->value >> 16;    }
+	u16 next()     { return this->value & 0xffff; }
+};
+
+bool
 CPU::_SetErroredLine()
 {
 	if (!this->extension.debug_info)
-		return;
-	DebugSymbol key;
+		return false;
+	u32 errored_pc = bytes2word(this->pc) - 1;
+	DebugSymbol key = {this->extension.debug_info};
 	for (
-		u32 word_index = this->extension.debug_info;
+		u32 word_index = key.word_num();
 		word_index < this->mem_size;
 		word_index += key.next()
 	) {
 		key.value = bytes2word(this->memory + word_index * sizeof(u32));
-		if (word_index == bytes2word(this->pc))
+		if (word_index == errored_pc)
 		{
 			this->extension.errored_line =
 				(char *)(this->memory + word_index * sizeof(u32));
-			return;
+			return true;
 		}
-		else if (key.word() > bytes2word(this->pc)) // instruction not present
-		                                            // in the source file
+		else if (key.word_num() > errored_pc) // instruction not present
+		                                      // in the source file
 			break;
 		else if (!key.next())  // no more lines follows
 			break;
 	}
-	this->extension.errored_line = NULL;
+	return false;
 }

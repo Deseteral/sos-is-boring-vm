@@ -13,12 +13,6 @@ struct CPU
 		ERR_STACK_EMPTY, ERR_STACK_OVERFLOW,
 		_ERR_SIZE
 	};
-	struct DebugSymbol {
-		u32 value;
-
-		u16 word() { return this->value >> 16;    }
-		u16 next() { return this->value & 0xffff; }
-	};
 	static const int MaxMemorySize = (1 << 30) - 1;
 	static const int NumberOfRegisters = 16 + 3;
 	static const int StackSize = 256;
@@ -52,5 +46,5 @@ struct CPU
 	u8 *WhichRegister(u8);
 	ProgramState Tick();
 
-	void _SetErroredLine();
+	bool _SetErroredLine();
 };
