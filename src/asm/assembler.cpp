@@ -3,6 +3,7 @@
 #include <cstring>
 #include <vector>
 
+#include "../conversion.hpp"
 #include "../opcodes.hpp"
 
 #define IF_OPCODE(VALUE) if (strcmp(opcode, VALUE) == 0)
@@ -24,15 +25,6 @@ struct Instruction
 	Token values[3];
 };
 
-void StringToUpperCase(char *str)
-{
-	for (int i = 0; str[i] != '\0'; i++)
-	{
-		if (str[i] >= 'a' && str[i] <= 'z')
-		  str[i] -= 32;
-	}
-}
-
 void Assemble(FILE *input_file, FILE *output_file)
 {
 	char opcode[32];
@@ -41,7 +33,7 @@ void Assemble(FILE *input_file, FILE *output_file)
 
 	while (fscanf(input_file, "%s", opcode) != EOF)
 	{
-		StringToUpperCase(opcode);
+		cstring_to_upper_case(opcode);
 
 		bool is_valid = true;
 

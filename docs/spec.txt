@@ -11,8 +11,8 @@ Table of contents:
 * Instruction length
 * Instruction set
   * Opcode table
-	* ALU flags
-	* Values table
+  * ALU flags
+  * Values table
 * Startup
 
 === Summary ====================================================================

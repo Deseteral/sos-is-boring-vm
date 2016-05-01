@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cctype>
 #include "types.hpp"
 
 static inline u32 bytes2word(u8 *bytes)
@@ -22,4 +23,12 @@ static inline void word2bytes(u32 word, u8 *bytes)
 static inline void bytes_add(u8 *bytes, u32 word)
 {
 	word2bytes(bytes2word(bytes) + word, bytes);
+}
+
+static inline void cstring_to_upper_case(char *str)
+{
+	for (int i = 0; str[i]; i++)
+	{
+		str[i] = toupper(str[i]);
+	}
 }
