@@ -1,7 +1,7 @@
 CXX= g++
 CXXFLAGS= -g -Wall -pedantic -std=c++0x
 LFLAGS=
-OBJS= obj/asm.o obj/cpu.o obj/vm.o
+OBJS= obj/asm.o obj/assembler.o obj/cpu.o obj/vm.o
 
 all: asm vm
 
