@@ -32,68 +32,72 @@ stack pointer is pointing to.
 
 === Instruction length =========================================================
 
-Instructions are always 32 bits long.
+All jump instructions using labels are 64 bits long.
+MOV a b, when b is a number is 64 bits long.
+All remaining instructions are 32 bits long.
 
- Opcode: 8 bits
-Value A: 8 bits
-Value B: 8 bits
-Value C: 8 bits
+ Opcode:  8 bits
+Value A:  8 bits
+Value B:  8 bits
+Value C:  8 bits
+Value D: 32 bits
 ----------------
-  Total: 32 bits
+  Total: 64 bits
 
 OOAABBCC
+DDDDDDDD
 
 === Instruction set ============================================================
 
---- Opcode table ---------------------------------------------------------------
-value  | opcode     | description
--------+------------+-----------------------------------------------------------
-0x00   | NOP        | no operation
-0x01   | HCF        | halt
-- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x02   | MOV  a b   | sets a to value of b when b is number,
-       |            |   sets a to b otherwise
-0x03   | ADD  a b   | sets a to a + b
-0x04   | SUB  a b   | sets a to a - b
-0x05   | MUL  a b   | sets a to a * b
-0x06   | IMUL a b   | sets a to a * b (signed only)
-0x07   | DIV  a b   | sets a to a / b
-0x08   | IDIV a b   | sets a to a / b (signed only)
-0x09   | MOD  a b   | sets a to a % b
-0x0A   | IMOD a b   | sets a to a % b (signed only)
-0x0B   | INC  a     | sets a to a + 1
-0x0C   | DEC  a     | sets a to a - 1
-0x0D   | SAR  a b   | sets a to a >> b (sign bit preserved)
-0x0E   | SAL  a b   | sets a to a << b
-       | SHL  a b   |
-0x0F   | SHR  a b   | sets a to a >> b
-0x10   | AND  a b   | sets a to a & b
-0x11   | OR   a b   | sets a to a | b
-0x12   | XOR  a b   | sets a to a ^ b
-0x13   | NOT  a     | negates a, and stores the result in a
-- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x14   | PUSH a     | push a to stack
-0x15   | POP  a     | pop value from stack and set a to it
-- - - -+- - - - - - + - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-0x16   | JMP  addr  | sets PC the memory address of label addr
-0x17   | JMR  a     | adds value of a to PC
-0x18   | CMP  a b   | compares a with b and sets flags
-0x19   | JZ   addr  | executes "JMP addr" if ZERO flag is set
-0x1A   | JNZ  addr  | executes "JMP addr" if ZERO flag isn't set
-0x1B   | JB   addr  | executes "JMP addr" if BELOW flag is set
-0x1C   | JNB  addr  | executes "JMP addr" if BELOW flag isn't set
-0x1D   | JL   addr  | executes "JMP addr" if LOWER flag is set
-0x1E   | JNL  addr  | executes "JMP addr" if LOWER flag isn't set
-0x1F   | JA   addr  | executes "JMP addr" if ABOVE flag is set
-0x20   | JNA  addr  | executes "JMP addr" if ABOVE flag isn't set
-0x21   | JG   addr  | executes "JMP addr" if GREATER flag is set
-0x22   | JNG  addr  | executes "JMP addr" if GREATER flag isn't set
-0x23   | JO   addr  | executes "JMP addr" if OVERFLOW flag is set
-0x24   | JNO  addr  | executes "JMP addr" if OVERFLOW flag isn't set
-0x25   | JC   addr  | executes "JMP addr" if CARRY flag is set
-0x26   | JNC  addr  | executes "JMP addr" if CARRY flag isn't set
-0x27   | LOOP addr  | executes "JMP addr" and "DEC LC" if LC > 0
--------+------------+-----------------------------------------------------------
+--- Instructions table -----------------------------------------------+--------+
+opcode | instruction | description                                    | length |
+-------+-------------+------------------------------------------------+--------+
+0x00   | NOP         | no operation                                   |   32   |
+0x01   | HCF         | halt                                           |   32   |
+- - - -+- - - - - - -+- - - - - - - - - - - - - - - - - - - - - - - - + - - - -+
+0x02   | MOV  a b    | sets a to value of b when b is number,         |  32/64 |
+       |             |   sets a to b otherwise                        |        |
+0x03   | ADD  a b    | sets a to a + b                                |   32   |
+0x04   | SUB  a b    | sets a to a - b                                |   32   |
+0x05   | MUL  a b    | sets a to a * b                                |   32   |
+0x06   | IMUL a b    | sets a to a * b (signed only)                  |   32   |
+0x07   | DIV  a b    | sets a to a / b                                |   32   |
+0x08   | IDIV a b    | sets a to a / b (signed only)                  |   32   |
+0x09   | MOD  a b    | sets a to a % b                                |   32   |
+0x0A   | IMOD a b    | sets a to a % b (signed only)                  |   32   |
+0x0B   | INC  a      | sets a to a + 1                                |   32   |
+0x0C   | DEC  a      | sets a to a - 1                                |   32   |
+0x0D   | SAR  a b    | sets a to a >> b (sign bit preserved)          |   32   |
+0x0E   | SAL  a b    | sets a to a << b                               |   32   |
+       | SHL  a b    |                                                |        |
+0x0F   | SHR  a b    | sets a to a >> b                               |   32   |
+0x10   | AND  a b    | sets a to a & b                                |   32   |
+0x11   | OR   a b    | sets a to a | b                                |   32   |
+0x12   | XOR  a b    | sets a to a ^ b                                |   32   |
+0x13   | NOT  a      | negates a, and stores the result in a          |   32   |
+- - - -+- - - - - - -+- - - - - - - - - - - - - - - - - - - - - - - - + - - - -+
+0x14   | PUSH a      | push a to stack                                |   32   |
+0x15   | POP  a      | pop value from stack and set a to it           |   32   |
+- - - -+- - - - - - -+- - - - - - - - - - - - - - - - - - - - - - - - + - - - -+
+0x16   | JMP  addr   | sets PC the memory address of label addr       |   64   |
+0x17   | JMR  a      | adds value of a to PC                          |   32   |
+0x18   | CMP  a b    | compares a with b and sets flags               |   32   |
+0x19   | JZ   addr   | executes "JMP addr" if ZERO flag is set        |   64   |
+0x1A   | JNZ  addr   | executes "JMP addr" if ZERO flag isn't set     |   64   |
+0x1B   | JB   addr   | executes "JMP addr" if BELOW flag is set       |   64   |
+0x1C   | JNB  addr   | executes "JMP addr" if BELOW flag isn't set    |   64   |
+0x1D   | JL   addr   | executes "JMP addr" if LOWER flag is set       |   64   |
+0x1E   | JNL  addr   | executes "JMP addr" if LOWER flag isn't set    |   64   |
+0x1F   | JA   addr   | executes "JMP addr" if ABOVE flag is set       |   64   |
+0x20   | JNA  addr   | executes "JMP addr" if ABOVE flag isn't set    |   64   |
+0x21   | JG   addr   | executes "JMP addr" if GREATER flag is set     |   64   |
+0x22   | JNG  addr   | executes "JMP addr" if GREATER flag isn't set  |   64   |
+0x23   | JO   addr   | executes "JMP addr" if OVERFLOW flag is set    |   64   |
+0x24   | JNO  addr   | executes "JMP addr" if OVERFLOW flag isn't set |   64   |
+0x25   | JC   addr   | executes "JMP addr" if CARRY flag is set       |   64   |
+0x26   | JNC  addr   | executes "JMP addr" if CARRY flag isn't set    |   64   |
+0x27   | LOOP addr   | executes "JMP addr" and "DEC LC" if LC > 0     |   64   |
+-------+-------------+------------------------------------------------+--------+
 
 --- ALU flags ------------------------------------------------------------------
 flag     | description
