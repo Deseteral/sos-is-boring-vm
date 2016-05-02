@@ -65,11 +65,11 @@ void Assemble(FILE *input_file, FILE *output_file)
 
 			if (value_a[0] == 'R')
 				ins.values[0].value = (VAL_R0 + atoi(&value_a[1]));
-			else if (strcmp(value_a, "LC") == 0)
+			else if (streq(value_a, "LC"))
 				ins.values[0].value = 0x10;
-			else if (strcmp(value_a, "SP") == 0)
+			else if (streq(value_a, "SP"))
 				ins.values[0].value = 0x11;
-			else if (strcmp(value_a, "PC") == 0)
+			else if (streq(value_a, "PC"))
 				ins.values[0].value = 0x12;
 
 			// Value B can be either a register or constant value
@@ -78,11 +78,11 @@ void Assemble(FILE *input_file, FILE *output_file)
 
 			if (value_b[0] == 'R')
 				ins.values[1].value = (VAL_R0 + atoi(&value_b[1]));
-			else if (strcmp(value_b, "LC") == 0)
+			else if (streq(value_b, "LC"))
 				ins.values[1].value = 0x10;
-			else if (strcmp(value_b, "SP") == 0)
+			else if (streq(value_b, "SP"))
 				ins.values[1].value = 0x11;
-			else if (strcmp(value_b, "PC") == 0)
+			else if (streq(value_b, "PC"))
 				ins.values[1].value = 0x12;
 			else
 			{

@@ -30,3 +30,5 @@ static inline void cstring_to_upper_case(char *str)
 	for (int i = 0; str[i]; i++)
 		str[i] = toupper(str[i]);
 }
+
+#define streq(a, b) strcmp(a, b) == 0
