@@ -32,7 +32,6 @@ stack pointer is pointing to.
 
 === Instruction length =========================================================
 
-All jump instructions using labels are 64 bits long.
 MOV a b, when b is a number is 64 bits long.
 All remaining instructions are 32 bits long.
 
@@ -79,24 +78,24 @@ opcode | instruction | description                                    | length |
 0x14   | PUSH a      | push a to stack                                |   32   |
 0x15   | POP  a      | pop value from stack and set a to it           |   32   |
 - - - -+- - - - - - -+- - - - - - - - - - - - - - - - - - - - - - - - + - - - -+
-0x16   | JMP  addr   | sets PC the memory address of label addr       |   64   |
+0x16   | JMP  addr   | sets PC the memory address of label addr       |   32   |
 0x17   | JMR  a      | adds value of a to PC                          |   32   |
 0x18   | CMP  a b    | compares a with b and sets flags               |   32   |
-0x19   | JZ   addr   | executes "JMP addr" if ZERO flag is set        |   64   |
-0x1A   | JNZ  addr   | executes "JMP addr" if ZERO flag isn't set     |   64   |
-0x1B   | JB   addr   | executes "JMP addr" if BELOW flag is set       |   64   |
-0x1C   | JNB  addr   | executes "JMP addr" if BELOW flag isn't set    |   64   |
-0x1D   | JL   addr   | executes "JMP addr" if LOWER flag is set       |   64   |
-0x1E   | JNL  addr   | executes "JMP addr" if LOWER flag isn't set    |   64   |
-0x1F   | JA   addr   | executes "JMP addr" if ABOVE flag is set       |   64   |
-0x20   | JNA  addr   | executes "JMP addr" if ABOVE flag isn't set    |   64   |
-0x21   | JG   addr   | executes "JMP addr" if GREATER flag is set     |   64   |
-0x22   | JNG  addr   | executes "JMP addr" if GREATER flag isn't set  |   64   |
-0x23   | JO   addr   | executes "JMP addr" if OVERFLOW flag is set    |   64   |
-0x24   | JNO  addr   | executes "JMP addr" if OVERFLOW flag isn't set |   64   |
-0x25   | JC   addr   | executes "JMP addr" if CARRY flag is set       |   64   |
-0x26   | JNC  addr   | executes "JMP addr" if CARRY flag isn't set    |   64   |
-0x27   | LOOP addr   | executes "JMP addr" and "DEC LC" if LC > 0     |   64   |
+0x19   | JZ   addr   | executes "JMP addr" if ZERO flag is set        |   32   |
+0x1A   | JNZ  addr   | executes "JMP addr" if ZERO flag isn't set     |   32   |
+0x1B   | JB   addr   | executes "JMP addr" if BELOW flag is set       |   32   |
+0x1C   | JNB  addr   | executes "JMP addr" if BELOW flag isn't set    |   32   |
+0x1D   | JL   addr   | executes "JMP addr" if LOWER flag is set       |   32   |
+0x1E   | JNL  addr   | executes "JMP addr" if LOWER flag isn't set    |   32   |
+0x1F   | JA   addr   | executes "JMP addr" if ABOVE flag is set       |   32   |
+0x20   | JNA  addr   | executes "JMP addr" if ABOVE flag isn't set    |   32   |
+0x21   | JG   addr   | executes "JMP addr" if GREATER flag is set     |   32   |
+0x22   | JNG  addr   | executes "JMP addr" if GREATER flag isn't set  |   32   |
+0x23   | JO   addr   | executes "JMP addr" if OVERFLOW flag is set    |   32   |
+0x24   | JNO  addr   | executes "JMP addr" if OVERFLOW flag isn't set |   32   |
+0x25   | JC   addr   | executes "JMP addr" if CARRY flag is set       |   32   |
+0x26   | JNC  addr   | executes "JMP addr" if CARRY flag isn't set    |   32   |
+0x27   | LOOP addr   | executes "JMP addr" and "DEC LC" if LC > 0     |   32   |
 -------+-------------+------------------------------------------------+--------+
 
 --- ALU flags ------------------------------------------------------------------
