@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cctype>
+#include <cstring>
+
 #include "types.hpp"
 
 static inline u32 bytes2word(u8 *bytes)
@@ -27,8 +29,11 @@ static inline void bytes_add(u8 *bytes, u32 word)
 
 static inline void cstring_to_upper_case(char *str)
 {
-	for (int i = 0; str[i]; i++)
-		str[i] = toupper(str[i]);
+	while ((*str = toupper(*str)))
+		++str;
 }
 
-#define streq(a, b) strcmp(a, b) == 0
+static inline bool streq(const char *a, const char *b)
+{
+	return strcmp(a, b) == 0;
+}
