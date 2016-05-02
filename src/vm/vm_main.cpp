@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	u32 mem_size = 16 * 1024;
 	char *input_file = NULL;
 	char *dump_file = NULL;
-	for (int option, long_option_index; (option = getopt_long(argc, argv, "hs:uv", LongOptions, &long_option_index)) != -1;)
+	for (int option, long_option_index; (option = getopt_long(argc, argv, "d:hs:uv", LongOptions, &long_option_index)) != -1;)
 		switch (option)
 		{
 			case 'd':
