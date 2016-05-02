@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
 	CPU::ProgramState state;
 	while ((state = cpu.Tick()) == CPU::OK)
 		continue;
-	FILE *dump;
 	if (dump_file != NULL)
 	{
-		if ((dump = fopen(input_file, "wb")) == NULL)
+		FILE *dump = fopen(dump_file, "wb");
+		if (dump == NULL)
 		{
 			fprintf(stderr, "Cannot open file \"%s\" for writing.\n", dump_file);
 			return ENOENT;
