@@ -30,7 +30,26 @@ struct Instruction
 	u32 next_word = 0;
 };
 
-void Assemble(FILE *input_file, FILE *output_file)
+bool which_register(char *value, u8 &reg)
+{
+	if (strlen(value) < 2)
+		return false;
+
+	if (value[0] == 'R')
+		reg = (VAL_R0 + atoi(&value[1]));
+	else if (streq(value, "LC"))
+		reg = 0x10;
+	else if (streq(value, "SP"))
+		reg = 0x11;
+	else if (streq(value, "PC"))
+		reg = 0x12;
+	else
+		return false;
+
+	return true;
+}
+
+void assemble(FILE *input_file, FILE *output_file)
 {
 	char opcode[32];
 	u32 pc = 0;
@@ -95,6 +114,22 @@ void Assemble(FILE *input_file, FILE *output_file)
 				sscanf(value_b, "%i", &snw);
 				ins.next_word = (u32)snw;
 			}
+		}
+		else IF_OPCODE("ADD")
+		{
+			ins.opcode = OP_ADD;
+
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			char value_a[32];
+			char value_b[32];
+
+			fscanf(input_file, "%s %s", value_a, value_b);
+			cstring_to_upper_case(value_a);
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
 		}
 		else
 			is_valid = false;

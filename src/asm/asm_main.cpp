@@ -69,7 +69,7 @@ int main(int argc, char *argv[])
 
 	FILE *output = fopen(output_file_name, "wb");
 
-	Assemble(input, output);
+	assemble(input, output);
 
 	fclose(input);
 	fclose(output);

@@ -4,4 +4,4 @@
 
 #include "../types.hpp"
 
-extern void Assemble(FILE *, FILE *);
+extern void assemble(FILE *, FILE *);
