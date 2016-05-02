@@ -81,29 +81,14 @@ void assemble(FILE *input_file, FILE *output_file)
 
 			// Value A is register
 			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-
-			if (value_a[0] == 'R')
-				ins.values[0].value = (VAL_R0 + atoi(&value_a[1]));
-			else if (streq(value_a, "LC"))
-				ins.values[0].value = 0x10;
-			else if (streq(value_a, "SP"))
-				ins.values[0].value = 0x11;
-			else if (streq(value_a, "PC"))
-				ins.values[0].value = 0x12;
+			which_register(value_a, ins.values[0].value);
 
 			// Value B can be either a register or constant value
 			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
 			ins.values[2].value = 0;
 
-			if (value_b[0] == 'R')
-				ins.values[1].value = (VAL_R0 + atoi(&value_b[1]));
-			else if (streq(value_b, "LC"))
-				ins.values[1].value = 0x10;
-			else if (streq(value_b, "SP"))
-				ins.values[1].value = 0x11;
-			else if (streq(value_b, "PC"))
-				ins.values[1].value = 0x12;
-			else
+			bool is_register = which_register(value_b, ins.values[1].value);
+			if (!is_register)
 			{
 				ins.values[1].token_type = TOKEN_TYPE_NUMBER;
 				ins.values[2].value = 1;
