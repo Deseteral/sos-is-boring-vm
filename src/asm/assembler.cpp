@@ -7,7 +7,20 @@
 #include "../utils.hpp"
 #include "../opcodes.hpp"
 
-#define IF_OPCODE(VALUE) if (strcmp(opcode, VALUE) == 0)
+#define IF_OPCODE(VALUE)\
+	if (strcmp(opcode, VALUE) == 0)
+
+#define READ_VALUE_A()\
+	char value_a[32];\
+	fscanf(input_file, "%s", value_a);\
+	cstring_to_upper_case(value_a);
+
+#define READ_VALUE_AB()\
+	char value_a[32];\
+	char value_b[32];\
+	fscanf(input_file, "%s %s", value_a, value_b);\
+	cstring_to_upper_case(value_a);\
+	cstring_to_upper_case(value_b);
 
 #define TOKEN_TYPE_NOTHING  0
 #define TOKEN_TYPE_REGISTER 1
@@ -59,22 +72,22 @@ void assemble(FILE *input_file, FILE *output_file)
 	{
 		cstring_to_upper_case(opcode);
 
+		Instruction ins;
 		bool is_valid = true;
 
-		Instruction ins;
 		IF_OPCODE("NOP")
+		{
 			ins.opcode = OP_NOP;
+		}
 		else IF_OPCODE("HCF")
+		{
 			ins.opcode = OP_HCF;
+		}
 		else IF_OPCODE("MOV")
 		{
 			ins.opcode = OP_MOV;
 
-			char value_a[32];
-			char value_b[32];
-
-			fscanf(input_file, "%s %s", value_a, value_b);
-			cstring_to_upper_case(value_a);
+			READ_VALUE_AB()
 
 			// Value C is a flag
 			ins.values[2].token_type = TOKEN_TYPE_FLAG;
@@ -103,18 +116,108 @@ void assemble(FILE *input_file, FILE *output_file)
 		else IF_OPCODE("ADD")
 		{
 			ins.opcode = OP_ADD;
-
 			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
 			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
 
-			char value_a[32];
-			char value_b[32];
-
-			fscanf(input_file, "%s %s", value_a, value_b);
-			cstring_to_upper_case(value_a);
+			READ_VALUE_AB()
 
 			which_register(value_a, ins.values[0].value);
 			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("SUB")
+		{
+			ins.opcode = OP_SUB;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("MUL")
+		{
+			ins.opcode = OP_MUL;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("IMUL")
+		{
+			ins.opcode = OP_IMUL;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("DIV")
+		{
+			ins.opcode = OP_DIV;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("IDIV")
+		{
+			ins.opcode = OP_IDIV;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("MOD")
+		{
+			ins.opcode = OP_MOD;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("IMOD")
+		{
+			ins.opcode = OP_IMOD;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("INC")
+		{
+			ins.opcode = OP_INC;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_A()
+
+			which_register(value_a, ins.values[0].value);
+		}
+		else IF_OPCODE("DEC")
+		{
+			ins.opcode = OP_DEC;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_A()
+
+			which_register(value_a, ins.values[0].value);
 		}
 		else
 			is_valid = false;
