@@ -2,7 +2,7 @@
 #include <cstring>
 
 #include "cpu.hpp"
-#include "../conversion.hpp"
+#include "../utils.hpp"
 #include "../opcodes.hpp"
 
 #define VALIDATE_ARGS(val1, val2)\

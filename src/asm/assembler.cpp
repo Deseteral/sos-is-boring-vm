@@ -4,7 +4,7 @@
 #include <cstring>
 #include <vector>
 
-#include "../conversion.hpp"
+#include "../utils.hpp"
 #include "../opcodes.hpp"
 
 #define IF_OPCODE(VALUE) if (strcmp(opcode, VALUE) == 0)
