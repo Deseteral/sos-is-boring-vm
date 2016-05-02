@@ -9,20 +9,27 @@ int main(int argc, char *argv[])
 	const char *const Help = "SOS is boring ASM - assembler for SOS VM\n"
 	"Syntax: asm [arguments] [input file]\n"
 	"Arguments:\n"
-	"  -h, --help            print this help text\n"
-	"  -u, --usage           short usage information\n"
-	"  -v, --version         display program version";
+	"  -h, --help              print this help text\n"
+	"  -u, --usage             short usage information\n"
+	"  -v, --version           display program version\n"
+	"  -o FILE, --output FILE  Place the output into FILE";
 
 	const struct option LongOptions[] = {
-		{"help", 0, NULL, 'h'},
+		{"help",    0, NULL, 'h'},
 		{"version", 0, NULL, 'v'},
-		{NULL, 0, NULL, 0}
+		{"output",  1, NULL, 'o'},
+		{NULL,      0, NULL, 0}
 	};
 
-	for (int option, long_option_index; (option = getopt_long(argc, argv, "hs:uv", LongOptions, &long_option_index)) != -1;)
+	char *output_file_name = "a.sos";
+
+	for (int option, long_option_index; (option = getopt_long(argc, argv, "huvo:", LongOptions, &long_option_index)) != -1;)
 	{
 		switch (option)
 		{
+			case 'o':
+				output_file_name = optarg;
+				break;
 			case 'h':
 				puts(Help);
 				return 0;
@@ -41,7 +48,6 @@ int main(int argc, char *argv[])
 	}
 
 	char *input_file_name = NULL;
-	char *output_file_name = "a.sos";
 
 	if (optind == argc - 1)  // 1 unknown parameter (input file name)
 		input_file_name = argv[optind];
@@ -57,15 +63,6 @@ int main(int argc, char *argv[])
 		fprintf(stderr, "Cannot open file \"%s\" for reading.\n", input_file_name);
 		return ENOENT;
 	}
-
-//	if (input_file_name != NULL)
-//	{
-//		char name[256];
-//		sscanf(input_file_name, "%s.asm", name);
-//		sprintf(output_file_name, "%s.sos", name);
-//	}
-//	else
-//		output_file_name = "a.sos";
 
 	FILE *output = fopen(output_file_name, "wb");
 
