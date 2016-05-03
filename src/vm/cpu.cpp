@@ -18,9 +18,7 @@ VALIDATE_ARG(val2)
 #define CONDITIONAL_JUMP(condition)\
 {\
 	if (condition)\
-		word2bytes(this->CurrentInstruction(), this->pc);\
-	else\
-		bytes_add(this->pc, 1);\
+		word2bytes(data(instruction), this->pc);\
 }
 
 #define VALIDATE_PC()\
@@ -315,7 +313,7 @@ CPU::Tick()
 			break;
 		case OP_JMP:
 			VALIDATE_PC()
-			word2bytes(this->CurrentInstruction(), this->pc);
+			word2bytes(data(instruction), this->pc);
 			break;
 		case OP_JMR:
 			VALIDATE_ARG(byte(instruction, 1))
@@ -384,24 +382,20 @@ CPU::Tick()
 			if (bytes2word(this->lc))
 			{
 				bytes_add(this->lc, -1);
-				word2bytes(this->CurrentInstruction(), this->pc);
+				word2bytes(data(instruction), this->pc);
 			}
-			else
-				bytes_add(this->pc, 1);
 			break;
 		case _OP_SIZE:
 			VALIDATE_PC()
-			if (this->mem_size < this->CurrentInstruction())
+			if (this->mem_size < data(instruction))
 			{
-				this->extension.required_memory = this->CurrentInstruction();
+				this->extension.required_memory = data(instruction);
 				return _ERR_SIZE;
 			}
-			bytes_add(this->pc, 1);
 			break;
 		case _OP_DEBUG:
 			VALIDATE_PC()
-			this->extension.debug_info = this->CurrentInstruction();
-			bytes_add(this->pc, 1);
+			this->extension.debug_info = data(instruction);
 			break;
 		default:
 			return ERR_INVALID_OPCODE;

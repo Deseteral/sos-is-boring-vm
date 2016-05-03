@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
 	u32 mem_size = 16 * 1024;
 	char *input_file = NULL;
 	char *dump_file = NULL;
-	for (int option, long_option_index; (option = getopt_long(argc, argv, "hs:uv", LongOptions, &long_option_index)) != -1;)
+	for (int option, long_option_index; (option = getopt_long(argc, argv, "d:hs:uv", LongOptions, &long_option_index)) != -1;)
 		switch (option)
 		{
 			case 'd':
@@ -98,10 +98,10 @@ int main(int argc, char *argv[])
 	CPU::ProgramState state;
 	while ((state = cpu.Tick()) == CPU::OK)
 		continue;
-	FILE *dump;
 	if (dump_file != NULL)
 	{
-		if ((dump = fopen(input_file, "wb")) == NULL)
+		FILE *dump = fopen(dump_file, "wb");
+		if (dump == NULL)
 		{
 			fprintf(stderr, "Cannot open file \"%s\" for writing.\n", dump_file);
 			return ENOENT;
