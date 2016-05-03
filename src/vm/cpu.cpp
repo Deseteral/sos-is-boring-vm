@@ -387,6 +387,11 @@ CPU::Tick()
 			break;
 		case _OP_SIZE:
 			VALIDATE_PC()
+			if (data(instruction) == 0 && this->mem_size < this->MaxMemorySize)
+			{
+				this->extension.required_memory = this->MaxMemorySize;
+				return _ERR_SIZE;
+			}
 			if (this->mem_size < data(instruction))
 			{
 				this->extension.required_memory = data(instruction);
