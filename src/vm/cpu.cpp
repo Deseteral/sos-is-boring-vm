@@ -43,9 +43,9 @@ static inline u32 byte(u32 instruction, u8 number)
 }
 
 CPU::CPU() :
-	lc(&this->registers[0x10 * sizeof(u32)]),
-	sp(&this->registers[0x11 * sizeof(u32)]),
-	pc(&this->registers[0x12 * sizeof(u32)]),
+	lc(&this->registers[VAL_LC * sizeof(u32)]),
+	sp(&this->registers[VAL_SP * sizeof(u32)]),
+	pc(&this->registers[VAL_PC * sizeof(u32)]),
 	mem_size(0), memory(NULL),
 	registers{0}, stack{0}, flags{false, false, false, false},
 	extension{0}
