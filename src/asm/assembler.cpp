@@ -22,6 +22,20 @@
 	cstring_to_upper_case(value_a);\
 	cstring_to_upper_case(value_b);
 
+#define STANDARD_INSTRUCTION(OPS, OP_ENUM)\
+	IF_OPCODE(OPS)\
+	{\
+		ins.opcode = OP_ENUM;\
+		ins.values[0].token_type = TOKEN_TYPE_REGISTER;\
+		ins.values[1].token_type = TOKEN_TYPE_REGISTER;\
+		\
+		READ_VALUE_AB()\
+		\
+		which_register(value_a, ins.values[0].value);\
+		which_register(value_b, ins.values[1].value);\
+	}\
+
+
 #define TOKEN_TYPE_NOTHING  0
 #define TOKEN_TYPE_REGISTER 1
 #define TOKEN_TYPE_NUMBER   2
@@ -119,94 +133,14 @@ void assemble(FILE *input_file, FILE *output_file)
 				ins.next_word = (u32)snw;
 			}
 		}
-		else IF_OPCODE("ADD")
-		{
-			ins.opcode = OP_ADD;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("SUB")
-		{
-			ins.opcode = OP_SUB;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("MUL")
-		{
-			ins.opcode = OP_MUL;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("IMUL")
-		{
-			ins.opcode = OP_IMUL;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("DIV")
-		{
-			ins.opcode = OP_DIV;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("IDIV")
-		{
-			ins.opcode = OP_IDIV;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("MOD")
-		{
-			ins.opcode = OP_MOD;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("IMOD")
-		{
-			ins.opcode = OP_IMOD;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
+		else STANDARD_INSTRUCTION("ADD", OP_ADD)
+		else STANDARD_INSTRUCTION("SUB", OP_SUB)
+		else STANDARD_INSTRUCTION("MUL", OP_MUL)
+		else STANDARD_INSTRUCTION("IMUL", OP_IMUL)	
+		else STANDARD_INSTRUCTION("DIV", OP_DIV)	
+		else STANDARD_INSTRUCTION("IDIV", OP_IDIV)	
+		else STANDARD_INSTRUCTION("MOD", OP_MOD)	
+		else STANDARD_INSTRUCTION("IMOD", OP_IMOD)	
 		else IF_OPCODE("INC")
 		{
 			ins.opcode = OP_INC;
@@ -225,92 +159,14 @@ void assemble(FILE *input_file, FILE *output_file)
 
 			which_register(value_a, ins.values[0].value);
 		}
-		else IF_OPCODE("SAR")
-		{
-			ins.opcode = OP_SAR;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("SAL")
-		{
-			ins.opcode = OP_SAL;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("SHL")
-		{
-			ins.opcode = OP_SHL;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("SHR")
-		{
-			ins.opcode = OP_SHR;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("AND")
-		{
-			ins.opcode = OP_AND;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("OR")
-		{
-			ins.opcode = OP_OR;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("XOR")
-		{
-			ins.opcode = OP_XOR;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_AB()
-
-			which_register(value_a, ins.values[0].value);
-			which_register(value_b, ins.values[1].value);
-		}
-		else IF_OPCODE("NOT")
-		{
-			ins.opcode = OP_NOT;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_A()
-
-			which_register(value_a, ins.values[0].value);
-		}
+		else STANDARD_INSTRUCTION("SAR", OP_SAR)	
+		else STANDARD_INSTRUCTION("SAL", OP_SAL)	
+		else STANDARD_INSTRUCTION("SHL", OP_SHL) 
+		else STANDARD_INSTRUCTION("SHR", OP_SHR) 
+		else STANDARD_INSTRUCTION("AND", OP_AND)
+		else STANDARD_INSTRUCTION("OR",  OP_OR) 
+		else STANDARD_INSTRUCTION("XOR", OP_XOR)
+		else STANDARD_INSTRUCTION("NOT", OP_NOT) 
 		else
 			is_valid = false;
 
