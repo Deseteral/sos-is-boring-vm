@@ -29,8 +29,11 @@
 
 struct Token
 {
-	u32 token_type = TOKEN_TYPE_NOTHING;
-	u8 value = 0;
+	u32 token_type;
+	u8 value;
+
+	Token() : token_type(TOKEN_TYPE_NOTHING), value(0)
+	{ }
 };
 
 struct Instruction
@@ -39,8 +42,11 @@ struct Instruction
 	u8 opcode;
 	Token values[3];
 
-	bool uses_next_word = false;
-	u32 next_word = 0;
+	bool uses_next_word;
+	u32 next_word;
+
+	Instruction() : uses_next_word(false), next_word(0)
+	{}
 };
 
 bool which_register(char *value, u8 &reg)
@@ -213,6 +219,92 @@ void assemble(FILE *input_file, FILE *output_file)
 		else IF_OPCODE("DEC")
 		{
 			ins.opcode = OP_DEC;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_A()
+
+			which_register(value_a, ins.values[0].value);
+		}
+		else IF_OPCODE("SAR")
+		{
+			ins.opcode = OP_SAR;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("SAL")
+		{
+			ins.opcode = OP_SAL;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("SHL")
+		{
+			ins.opcode = OP_SHL;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("SHR")
+		{
+			ins.opcode = OP_SHR;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("AND")
+		{
+			ins.opcode = OP_AND;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("OR")
+		{
+			ins.opcode = OP_OR;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("XOR")
+		{
+			ins.opcode = OP_XOR;
+			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+
+			READ_VALUE_AB()
+
+			which_register(value_a, ins.values[0].value);
+			which_register(value_b, ins.values[1].value);
+		}
+		else IF_OPCODE("NOT")
+		{
+			ins.opcode = OP_NOT;
 			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
 
 			READ_VALUE_A()
