@@ -34,12 +34,12 @@ for I in "$TESTSDIR"/*.asm; do
 	fi
 	echo -e "\e[0m"
 
-	eval "$VM -d $OUTDIR/$I.hex $TESTSDIR/$I.sos &> $OUTDIR/$I.out"
-	cmp "$OUTDIR/$I.out" "$TESTSDIR/$I.out" &> /dev/null
+	eval "$VM -d $OUTDIR/$I.hex $TESTSDIR/$I.sos &> $OUTDIR/$I.log"
+	cmp "$OUTDIR/$I.log" "$TESTSDIR/$I.log" &> /dev/null
 	if [ "$?" -ne 0 ]; then
-		echo -ne "DIFFERS: \e[31m$I.out"
+		echo -ne "DIFFERS: \e[31m$I.log"
 	else
-		echo -ne "OK: \e[32m$I.out"
+		echo -ne "OK: \e[32m$I.log"
 	fi
 	echo -e "\e[0m"
 
