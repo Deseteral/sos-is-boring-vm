@@ -34,7 +34,7 @@ for I in "$TESTSDIR"/*.asm; do
 	fi
 	echo -e "\e[0m"
 
-	eval "$VM -d $OUTDIR/$I.hex $TESTSDIR/$I.sos &> $OUTDIR/$I.log"
+	eval "$VM -d $OUTDIR/$I.hex $OUTDIR/$I.sos &> $OUTDIR/$I.log"
 	cmp "$OUTDIR/$I.log" "$TESTSDIR/$I.log" &> /dev/null
 	if [ "$?" -ne 0 ]; then
 		echo -ne "DIFFERS: \e[31m$I.log"
