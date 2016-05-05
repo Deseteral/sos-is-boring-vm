@@ -123,8 +123,8 @@ CPU::Tick()
 				VALIDATE_PC()
 				if ((ptr1 = this->WhichRegister(byte(instruction, 1))) == NULL)
 					return ERR_ADDRESS_BOUNDARY;
-				word2bytes(this->CurrentInstruction(), ptr1);
 				bytes_add(this->pc, 1);
+				word2bytes(this->LastInstruction(), ptr1);
 			}
 			else
 			{
