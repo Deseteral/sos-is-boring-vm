@@ -63,6 +63,75 @@ struct Instruction
 	{}
 };
 
+struct Opcode {
+	const char *Name;
+	const u8 Value;
+};
+
+const Opcode SortedOpcodes[] =
+{
+	{"ADD",  OP_ADD},
+	{"AND",  OP_AND},
+	{"CMP",  OP_CMP},
+	{"DEC",  OP_DEC},
+	{"DIV",  OP_DIV},
+	{"HCF",  OP_HCF},
+	{"IDIV", OP_IDIV},
+	{"IMOD", OP_IMOD},
+	{"IMUL", OP_IMUL},
+	{"INC",  OP_INC},
+
+	{"JA",   OP_JA},
+	{"JB",   OP_JB},
+	{"JC",   OP_JC},
+	{"JG",   OP_JG},
+	{"JL",   OP_JL},
+	{"JMP",  OP_JMP},
+	{"JMR",  OP_JMR},
+	{"JNA",  OP_JNA},
+	{"JNB",  OP_JNB},
+	{"JNC",  OP_JNC},
+	{"JNG",  OP_JNG},
+	{"JNL",  OP_JNL},
+	{"JNO",  OP_JNO},
+	{"JNZ",  OP_JNZ},
+	{"JO",   OP_JO},
+	{"JZ",   OP_JZ},
+
+	{"LOOP", OP_LOOP},
+	{"MOD",  OP_MOD},
+	{"MOV",  OP_MOV},
+	{"MUL",  OP_MUL},
+	{"NOP",  OP_NOP},
+	{"NOT",  OP_NOT},
+	{"OR",   OP_OR},
+	{"POP",  OP_POP},
+	{"PUSH", OP_PUSH},
+	{"SAL",  OP_SAL},
+	{"SAR",  OP_SAR},
+	{"SHL",  OP_SHL},
+	{"SHR",  OP_SHR},
+	{"SUB",  OP_SUB},
+	{"XOR",  OP_XOR}
+};
+
+int compare_Opcode(const void *Op1, const void *Op2)
+{
+	return strcmp(((const Opcode *)Op1)->Name, ((const Opcode *)Op2)->Name);
+}
+
+Opcode *find_Opcode(const char *str)
+{
+	Opcode key = {str, 0};
+	return (Opcode *)bsearch(
+		&key,
+		SortedOpcodes,
+		sizeof SortedOpcodes / sizeof(Opcode),
+		sizeof(Opcode),
+		compare_Opcode
+	);
+}
+
 bool which_register(char *value, u8 &reg)
 {
 	if (strlen(value) < 2)
