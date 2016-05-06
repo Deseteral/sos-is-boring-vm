@@ -7,23 +7,21 @@
 #include "../utils.hpp"
 #include "../opcodes.hpp"
 
-#define IF_OPCODE(VALUE)\
-	if (strcmp(opcode, VALUE) == 0)
-
 #define READ_VALUE_A()\
 	char value_a[32];\
-	fscanf(input_file, "%s", value_a);\
+	/* TODO: sscanf() error checking */\
+	sscanf(line + characters_read, "%s", value_a);\
 	cstring_to_upper_case(value_a);
 
 #define READ_VALUE_AB()\
 	char value_a[32];\
 	char value_b[32];\
-	fscanf(input_file, "%s %s", value_a, value_b);\
+	/* TODO: sscanf() error checking */\
+	sscanf(line + characters_read, "%s %s", value_a, value_b);\
 	cstring_to_upper_case(value_a);\
 	cstring_to_upper_case(value_b);
 
-#define STANDARD_INSTRUCTION(OPS, OP_ENUM)\
-	IF_OPCODE(OPS)\
+#define STANDARD_INSTRUCTION(OP_ENUM)\
 	{\
 		ins.opcode = OP_ENUM;\
 		ins.values[0].token_type = TOKEN_TYPE_REGISTER;\
@@ -153,102 +151,122 @@ bool which_register(char *value, u8 &reg)
 
 void assemble(FILE *input_file, FILE *output_file)
 {
-	char opcode[32];
+	static char line[262136];  // longer line cannot be debugged
+	char opcode_str[32 + 1];
 	u32 pc = 0;
 	std::vector<Instruction> instructions;
 
-	while (fscanf(input_file, "%s", opcode) != EOF)
+	while (fgets(line, sizeof line, input_file))
 	{
-		cstring_to_upper_case(opcode);
+		int characters_read;
+		if (sscanf(line, "%32s%n", opcode_str, &characters_read) == EOF)
+			// empty line (whitespaces)
+			continue;
+		if (opcode_str[0] == ';')  // line starts with a comment
+			continue;
+
+		cstring_to_upper_case(opcode_str);
+		Opcode *opcode_ptr = find_Opcode(opcode_str);
+		if (opcode_ptr == NULL)  // not an instruction
+			continue;
 
 		Instruction ins;
-		bool is_valid = true;
-
-		IF_OPCODE("NOP")
+		u8 opcode = opcode_ptr->Value;
+		switch (opcode)
 		{
-			ins.opcode = OP_NOP;
-		}
-		else IF_OPCODE("HCF")
-		{
-			ins.opcode = OP_HCF;
-		}
-		else IF_OPCODE("MOV")
-		{
-			ins.opcode = OP_MOV;
-
-			READ_VALUE_AB()
-
-			// Value C is a flag
-			ins.values[2].token_type = TOKEN_TYPE_FLAG;
-
-			// Value A is register
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-			which_register(value_a, ins.values[0].value);
-
-			// Value B can be either a register or constant value
-			ins.values[1].token_type = TOKEN_TYPE_REGISTER;
-			ins.values[2].value = 0;
-
-			bool is_register = which_register(value_b, ins.values[1].value);
-			if (!is_register)
+			case OP_NOP:
+				ins.opcode = OP_NOP;
+				break;
+			case OP_HCF:
+				ins.opcode = OP_HCF;
+				break;
+			case OP_MOV:
 			{
-				ins.values[1].token_type = TOKEN_TYPE_NUMBER;
-				ins.values[2].value = 1;
+				ins.opcode = OP_MOV;
 
-				ins.uses_next_word = true;
+				READ_VALUE_AB()
 
-				s32 snw;
-				sscanf(value_b, "%i", &snw);
-				ins.next_word = (u32)snw;
+				// Value C is a flag
+				ins.values[2].token_type = TOKEN_TYPE_FLAG;
+
+				// Value A is register
+				ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+				which_register(value_a, ins.values[0].value);
+
+				// Value B can be either a register or constant value
+				ins.values[1].token_type = TOKEN_TYPE_REGISTER;
+				ins.values[2].value = 0;
+
+				bool is_register = which_register(value_b, ins.values[1].value);
+				if (!is_register)
+				{
+					ins.values[1].token_type = TOKEN_TYPE_NUMBER;
+					ins.values[2].value = 1;
+
+					ins.uses_next_word = true;
+
+					s32 snw;
+					sscanf(value_b, "%i", &snw);
+					ins.next_word = (u32)snw;
+				}
 			}
+				break;
+			case OP_ADD:
+			case OP_SUB:
+			case OP_MUL:
+			case OP_IMUL:
+			case OP_DIV:
+			case OP_IDIV:
+			case OP_MOD:
+			case OP_IMOD:
+				STANDARD_INSTRUCTION(opcode)
+				break;
+			case OP_INC:
+			{
+				ins.opcode = OP_INC;
+				ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+
+				READ_VALUE_A()
+
+				which_register(value_a, ins.values[0].value);
+			}
+				break;
+			case OP_DEC:
+			{
+				ins.opcode = OP_DEC;
+				ins.values[0].token_type = TOKEN_TYPE_REGISTER;
+
+				READ_VALUE_A()
+
+				which_register(value_a, ins.values[0].value);
+			}
+				break;
+			case OP_SAR:
+			// OP_SAL duplicates OP_SHL
+			case OP_SHL:
+			case OP_SHR:
+			case OP_AND:
+			case OP_OR:
+			case OP_XOR:
+			case OP_NOT:
+				STANDARD_INSTRUCTION(opcode)
+				break;
+			default:
+				fprintf(
+					stderr,
+					"Unimplemented instruction (%s). Code may misbehave!\n",
+					opcode_str
+				);
+				break;
 		}
-		else STANDARD_INSTRUCTION("ADD", OP_ADD)
-		else STANDARD_INSTRUCTION("SUB", OP_SUB)
-		else STANDARD_INSTRUCTION("MUL", OP_MUL)
-		else STANDARD_INSTRUCTION("IMUL", OP_IMUL)	
-		else STANDARD_INSTRUCTION("DIV", OP_DIV)	
-		else STANDARD_INSTRUCTION("IDIV", OP_IDIV)	
-		else STANDARD_INSTRUCTION("MOD", OP_MOD)	
-		else STANDARD_INSTRUCTION("IMOD", OP_IMOD)	
-		else IF_OPCODE("INC")
-		{
-			ins.opcode = OP_INC;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
 
-			READ_VALUE_A()
+		ins.address = pc;
+		pc += 4;
 
-			which_register(value_a, ins.values[0].value);
-		}
-		else IF_OPCODE("DEC")
-		{
-			ins.opcode = OP_DEC;
-			ins.values[0].token_type = TOKEN_TYPE_REGISTER;
-
-			READ_VALUE_A()
-
-			which_register(value_a, ins.values[0].value);
-		}
-		else STANDARD_INSTRUCTION("SAR", OP_SAR)	
-		else STANDARD_INSTRUCTION("SAL", OP_SAL)	
-		else STANDARD_INSTRUCTION("SHL", OP_SHL) 
-		else STANDARD_INSTRUCTION("SHR", OP_SHR) 
-		else STANDARD_INSTRUCTION("AND", OP_AND)
-		else STANDARD_INSTRUCTION("OR",  OP_OR) 
-		else STANDARD_INSTRUCTION("XOR", OP_XOR)
-		else STANDARD_INSTRUCTION("NOT", OP_NOT) 
-		else
-			is_valid = false;
-
-		if (is_valid)
-		{
-			ins.address = pc;
+		if (ins.uses_next_word)
 			pc += 4;
 
-			if (ins.uses_next_word)
-				pc += 4;
-
-			instructions.push_back(ins);
-		}
+		instructions.push_back(ins);
 	}
 
 	// Write to file
