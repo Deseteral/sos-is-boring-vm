@@ -21,7 +21,10 @@ make asm
 ```
 
 ## Testing
-Coming soon :)
+To run the tests execute `run_tests.sh` script:
+```
+./run_tests.sh
+```
 
 ## License
 The project is [MIT licensed](LICENSE).
