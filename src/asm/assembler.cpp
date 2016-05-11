@@ -10,14 +10,14 @@
 #define READ_VALUE_A()\
 	char value_a[32];\
 	/* TODO: sscanf() error checking */\
-	sscanf(line + characters_read, "%s", value_a);\
+	sscanf(line, "%*10s %s", value_a);\
 	cstring_to_upper_case(value_a);
 
 #define READ_VALUE_AB()\
 	char value_a[32];\
 	char value_b[32];\
 	/* TODO: sscanf() error checking */\
-	sscanf(line + characters_read, "%s %s", value_a, value_b);\
+	sscanf(line, "%*10s %s %s", value_a, value_b);\
 	cstring_to_upper_case(value_a);\
 	cstring_to_upper_case(value_b);
 
@@ -152,14 +152,13 @@ bool which_register(char *value, u8 &reg)
 void assemble(FILE *input_file, FILE *output_file)
 {
 	static char line[262136];  // longer line cannot be debugged
-	char opcode_str[32 + 1];
+	char opcode_str[10 + 1];
 	u32 pc = 0;
 	std::vector<Instruction> instructions;
 
 	while (fgets(line, sizeof line, input_file))
 	{
-		int characters_read;
-		if (sscanf(line, "%32s%n", opcode_str, &characters_read) == EOF)
+		if (sscanf(line, "%10s", opcode_str) == EOF)
 			// empty line (whitespaces)
 			continue;
 		if (opcode_str[0] == ';')  // line starts with a comment
