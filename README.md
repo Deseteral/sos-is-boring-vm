@@ -7,7 +7,7 @@ specification is located [here](docs/spec.txt).
 
 ## Building
 Currently only Linux builds are supported.
-Only required dependency is GCC with g++.
+The only required dependencies are C++ compiler and Make.
 
 To build, execute Makefile found in project's root directory:
 ```
