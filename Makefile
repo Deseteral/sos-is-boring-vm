@@ -1,4 +1,4 @@
-CXX= g++
+CXX= c++
 CXXFLAGS= -g -Wall -pedantic -std=c++0x
 LFLAGS=
 OBJS= obj/asm.o obj/assembler.o obj/cpu.o obj/vm.o
