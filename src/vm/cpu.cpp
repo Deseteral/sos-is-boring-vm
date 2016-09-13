@@ -133,7 +133,7 @@ CPU::Tick()
 				ptr2 = this->WhichRegister(byte(instruction, 2));
 				if (!ptr1 || !ptr2)
 					return ERR_ADDRESS_BOUNDARY;
-				word2bytes(bytes2word(ptr2), ptr1);
+				memcpy(ptr1, ptr2, sizeof(u32));
 			}
 			break;
 		case OP_ADD:
@@ -299,7 +299,7 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			if ((word = bytes2word(this->sp)) >= this->StackSize)
 				return ERR_STACK_OVERFLOW;
-			word2bytes(bytes2word(ptr1), stack + word * sizeof(u32));
+			memcpy(this->stack + word * sizeof(u32), ptr1, sizeof(u32));
 			bytes_add(this->sp, 1);
 			break;
 		case OP_POP:
@@ -308,7 +308,7 @@ CPU::Tick()
 				return ERR_ADDRESS_BOUNDARY;
 			if ((word = bytes2word(this->sp)) == 0)
 				return ERR_STACK_EMPTY;
-			word2bytes(bytes2word(ptr1), stack + word * sizeof(u32));
+			memcpy(ptr1, this->stack + word * sizeof(u32), sizeof(u32));
 			bytes_add(this->sp, -1);
 			break;
 		case OP_JMP:
