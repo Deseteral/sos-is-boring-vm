@@ -6,8 +6,10 @@
 #include "../opcodes.hpp"
 
 #define VALIDATE_ARGS(val1, val2)\
-VALIDATE_ARG(val1)\
-VALIDATE_ARG(val2)
+{\
+	VALIDATE_ARG(val1)\
+	VALIDATE_ARG(val2)\
+}
 
 #define VALIDATE_ARG(value)\
 {\
