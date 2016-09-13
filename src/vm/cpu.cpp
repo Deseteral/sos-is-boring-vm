@@ -373,6 +373,19 @@ CPU::Tick()
 				word2bytes(data(instruction), this->pc);
 			}
 			break;
+		case OP_CALL:
+			if ((word = bytes2word(this->sp)) >= this->StackSize)
+				return ERR_STACK_OVERFLOW;
+			word2bytes(bytes2word(this->pc) - 1, this->stack + word * sizeof(u32));
+			bytes_add(this->sp, 1);
+			word2bytes(data(instruction), this->pc);
+			break;
+		case OP_RET:
+			if ((word = bytes2word(this->sp)) == 0)
+				return ERR_STACK_EMPTY;
+			word2bytes(bytes2word(this->stack + word * sizeof(u32)) + 1, this->pc);
+			bytes_add(this->sp, -1);
+			break;
 		case _OP_SIZE:
 			if (data(instruction) == 0 && this->mem_size < this->MaxMemorySize)
 			{
