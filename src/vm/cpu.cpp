@@ -312,7 +312,6 @@ CPU::Tick()
 			bytes_add(this->sp, -1);
 			break;
 		case OP_JMP:
-			VALIDATE_PC()
 			word2bytes(data(instruction), this->pc);
 			break;
 		case OP_JMR:
@@ -338,47 +337,36 @@ CPU::Tick()
 			break;
 		}
 		case OP_JZ:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(this->flags.zero)
 			break;
 		case OP_JNZ:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(!this->flags.zero)
 			break;
 		case OP_JB:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(this->flags.below)
 			break;
 		case OP_JNB:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(!this->flags.below)
 			break;
 		case OP_JL:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(this->flags.lower)
 			break;
 		case OP_JNL:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(!this->flags.lower)
 			break;
 		case OP_JA:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(this->flags.above)
 			break;
 		case OP_JNA:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(!this->flags.above)
 			break;
 		case OP_JG:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(this->flags.greater)
 			break;
 		case OP_JNG:
-			VALIDATE_PC()
 			CONDITIONAL_JUMP(!this->flags.greater)
 			break;
 		case OP_LOOP:
-			VALIDATE_PC()
 			if (bytes2word(this->lc))
 			{
 				bytes_add(this->lc, -1);
@@ -386,7 +374,6 @@ CPU::Tick()
 			}
 			break;
 		case _OP_SIZE:
-			VALIDATE_PC()
 			if (data(instruction) == 0 && this->mem_size < this->MaxMemorySize)
 			{
 				this->extension.required_memory = this->MaxMemorySize;
@@ -399,7 +386,6 @@ CPU::Tick()
 			}
 			break;
 		case _OP_DEBUG:
-			VALIDATE_PC()
 			this->extension.debug_info = data(instruction);
 			break;
 		default:
