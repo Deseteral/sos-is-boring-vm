@@ -96,6 +96,8 @@ opcode | instruction | description                                    | length |
 0x25   | JC   addr   | executes "JMP addr" if CARRY flag is set       |   32   |
 0x26   | JNC  addr   | executes "JMP addr" if CARRY flag isn't set    |   32   |
 0x27   | LOOP addr   | executes "JMP addr" and "DEC LC" if LC > 0     |   32   |
+0x28   | CALL addr   | executes "PUSH PC" and "JMP addr"              |   32   |
+0x29   | RET         | executes "PULL PC" and "INC PC"                |   32   |
 -------+-------------+------------------------------------------------+--------+
 
 --- ALU flags ------------------------------------------------------------------

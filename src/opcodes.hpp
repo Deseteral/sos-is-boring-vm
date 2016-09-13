@@ -41,6 +41,8 @@
 #define OP_JC   0x25
 #define OP_JNC  0x26
 #define OP_LOOP 0x27
+#define OP_CALL 0x28
+#define OP_RET  0x29
 
 // extensions
 #define _OP_SIZE  0xF0
