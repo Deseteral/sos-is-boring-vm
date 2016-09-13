@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
 	"Arguments:\n"
 	"  -d FILE, --dump FILE  print memory dump to a file\n"
 	"  -h, --help            print this help text\n"
-	"  -s SIZE, --size SIZE  set memory size in 32-bit words (less than 2^30)\n"
+	"  -s SIZE, --size SIZE  set memory size in 32-bit words (<= 2^24)\n"
 	"  -u, --usage           short usage information\n"
 	"  -v, --version         display program version";
 	const struct option LongOptions[] = {
